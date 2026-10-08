@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مزاد الأساطير</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f3ea;--ink:#2a2c2e;--mut:#8b8a83;--line:#dcd7c9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Cairo,system-ui,sans-serif;line-height:1.7}
+#app{max-width:720px;margin:0 auto;padding:36px 20px 64px}
+h1{font-size:1.1rem;font-weight:700;margin:0 0 24px}
+h2{font-size:1rem;font-weight:700;margin:0 0 12px}
+p{margin:0 0 12px}
+.mut{color:var(--mut);font-size:.9rem}
+.stages{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:22px;font-size:.85rem;color:var(--mut)}
+.stages .on{color:var(--ink);font-weight:700;border-bottom:2px solid var(--ink)}
+.stages .done{text-decoration:line-through}
+.teams{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.team{padding:16px 0 16px 18px}
+.team+.team{border-right:1px solid var(--line);padding:16px 18px 16px 0}
+.team b{font-weight:700}
+.team.on b:before{content:"● "}
+.money{font-size:2rem;font-weight:300;line-height:1.3}
+.names{list-style:none;margin:8px 0 0;padding:0;font-size:.85rem;color:var(--mut)}
+.names .need{color:var(--ink)}
+.lot{text-align:center;padding:44px 0 32px}
+.nm{font-size:2.8rem;font-weight:300;line-height:1.2}
+.meta{color:var(--mut);margin:6px 0 26px}
+.bid{font-size:4.5rem;font-weight:200;line-height:1.1}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+button{font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;padding:10px 20px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:0}
+button.alt{background:transparent;color:var(--ink)}
+button:hover:not(:disabled){opacity:.8}
+button:disabled{opacity:.25;cursor:not-allowed}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+input{font:inherit;padding:9px 12px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:0;width:100%;margin:4px 0 16px}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 18px}
+.modes button{text-align:right;padding:12px 14px;font-weight:400}
+.modes small{opacity:.7}
+.panel{border-top:1px solid var(--line);padding-top:18px;text-align:center}
+.rev{list-style:none;margin:0;padding:0}
+.rev li{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:.9rem;opacity:0;animation:in .4s forwards}
+.score{font-size:4rem;font-weight:200;text-align:center;line-height:1.2;margin-top:28px;opacity:0;animation:in .8s forwards}
+.win{font-size:1.3rem;font-weight:700;margin-top:8px}
+@keyframes in{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.rev li,.score{animation-duration:.01s;animation-delay:0s!important}}
+@media (max-width:480px){.nm{font-size:2.1rem}.bid{font-size:3.4rem}.modes{grid-template-columns:1fr}}
+.av{display:inline-block;width:28px;height:28px;border-radius:50%;background:var(--line);overflow:hidden;vertical-align:middle;margin-left:8px;text-align:center;line-height:28px;font-size:.75rem;color:var(--mut);flex:none}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.av.big{display:block;width:150px;height:150px;line-height:150px;font-size:3rem;margin:0 auto 18px}
+.rev .av{margin-left:6px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const PLAYERS = `
+G|ياشين|Lev Yashin|97|P
+G|بوفون|Gianluigi Buffon|95|P
+G|كاسياس|Iker Casillas|94|P
+G|كاهن|Oliver Kahn|93|P
+G|شمايكل|Peter Schmeichel|93|P
+G|نوير|Manuel Neuer|93|H
+G|زوف|Dino Zoff|92|P
+G|بيتر تشيك|Petr Čech|92|P
+G|كورتوا|Thibaut Courtois|92|H
+G|بانكس|Gordon Banks|91|P
+G|فان در سار|Edwin van der Sar|90|P
+G|سيب ماير|Sepp Maier|90|P
+G|شيلتون|Peter Shilton|90|P
+G|أليسون|Alisson Becker|90|H
+G|أوبلاك|Jan Oblak|89|H
+G|جيلمار|Gilmar dos Santos Neves|88|P
+G|إيدرسون|Ederson (footballer, born 1993)|88|H
+G|ماينيان|Mike Maignan|88|H
+G|إيميليانو مارتينيز|Emiliano Martínez|88|H
+G|ترشتيغن|Marc-André ter Stegen|88|N
+G|تافاريل|Cláudio Taffarel|87|P
+G|داساييف|Rinat Dasayev|87|P
+G|بات جينينغز|Pat Jennings|87|P
+G|بونو|Yassine Bounou|87|H
+G|غروسيتش|Gyula Grosics|86|P
+G|بارتيز|Fabien Barthez|86|P
+G|سيمان|David Seaman|86|P
+G|زينغا|Walter Zenga|86|P
+G|تشيلافيرت|José Luis Chilavert|86|P
+G|دوناروما|Gianluigi Donnarumma|86|N
+G|كوبل|Gregor Kobel|86|N
+G|فيلول|Ubaldo Fillol|85|P
+G|بفاف|Jean-Marie Pfaff|85|P
+G|بريود هوم|Michel Preud'homme|85|P
+G|ليمان|Jens Lehmann|85|P
+G|فالديس|Víctor Valdés|85|P
+G|كاريزو|Amadeo Carrizo|85|P
+G|بيروتسي|Angelo Peruzzi|85|P
+G|ري كليمنس|Ray Clemence|85|P
+G|يان سومر|Yann Sommer|85|N
+G|دي خيا|David de Gea|85|N
+G|الحضري|Essam El-Hadary|84|P
+G|رينا|Pepe Reina|84|P
+G|هاندانوفيتش|Samir Handanović|84|P
+G|باجليوكا|Gianluca Pagliuca|84|P
+G|تولدو|Francesco Toldo|84|P
+G|باربوسا|Moacir Barbosa|84|P
+G|مازوركيفيتش|Ladislao Mazurkiewicz|84|P
+G|كيلور نافاس|Keylor Navas|84|N
+G|لوريس|Hugo Lloris|84|N
+G|أوناي سيمون|Unai Simón|84|N
+G|ديوغو كوستا|Diogo Costa|84|N
+G|دافيد رايا|David Raya|84|N
+G|كانيساريس|Santiago Cañizares|83|P
+G|الدعيع|Mohamed Al-Deayea|83|P
+G|دوديك|Jerzy Dudek|82|P
+G|جيفن|Shay Given|82|P
+G|كلاوديو برافو|Claudio Bravo|82|P
+G|رشدي ريتشبر|Rüştü Reçber|82|P
+G|غروبيلار|Bruce Grobbelaar|82|P
+G|رافيلي|Thomas Ravelli|82|P
+G|لاما|Bernard Lama|82|P
+G|فريدل|Brad Friedel|82|P
+G|تيم هوارد|Tim Howard|82|P
+G|هيغيتا|René Higuita|82|P
+G|لينو|Bernd Leno|82|N
+G|بيكفورد|Jordan Pickford|82|N
+G|سيزني|Wojciech Szczęsny|82|N
+G|كاسبر شمايكل|Kasper Schmeichel|82|N
+G|إدوارد ميندي|Édouard Mendy|82|N
+G|هرادسكي|Lukáš Hrádecký|82|N
+G|ماماردشفيلي|Giorgi Mamardashvili|82|N
+G|فيكاريو|Guglielmo Vicario|82|N
+G|كيلير|Caoimhín Kelleher|82|N
+G|شوارزر|Mark Schwarzer|81|P
+G|أوشوا|Guillermo Ochoa|81|N
+G|مبولحي|Raïs M'Bolhi|80|P
+G|سيرخيو روميرو|Sergio Romero|80|P
+G|أونانا|André Onana|80|N
+G|هارت|Joe Hart|80|N
+G|موسليرا|Fernando Muslera|80|N
+G|أريولا|Alphonse Areola|80|N
+G|تراب|Kevin Trapp|80|N
+G|باومان|Oliver Baumann|80|N
+G|كاستيلس|Koen Casteels|80|N
+G|باتريسيو|Rui Patrício|80|N
+G|ميريت|Alex Meret|80|N
+G|بروفيديل|Ivan Provedel|80|N
+G|سفيلار|Mile Svilar|80|N
+G|كيبا|Kepa Arrizabalaga|80|N
+G|موسو|Juan Musso|80|N
+G|الشناوي|Mohamed El Shenawy|80|N
+G|رامسديل|Aaron Ramsdale|80|N
+G|فليكن|Mark Flekken|79|N
+G|كارنيسيكي|Marco Carnesecchi|79|N
+G|ريان|Mathew Ryan|79|N
+G|العويس|Mohammed Al-Owais|79|N
+G|بوب|Nick Pope|79|N
+G|جيرونيمو روي|Gerónimo Rulli|79|N
+G|سا|José Sá (footballer)|79|N
+G|هندرسون|Dean Henderson|78|N
+G|فابيانسكي|Łukasz Fabiański|78|N
+G|غوايتا|Vicente Guaita|78|N
+G|نوبل|Alexander Nübel|78|N
+G|بولكا|Marcin Bułka|78|N
+G|فيربروغن|Bart Verbruggen|78|N
+G|أنتوني لوبيز|Anthony Lopes|78|N
+G|سيلس|Matz Sels|77|N
+G|غوندوز|Alexis Guendouz|74|N
+G|ماندريا|Anthony Mandrea|72|N
+G|لوكا زيدان|Luca Zidane|72|N
+D|بيكنباور|Franz Beckenbauer|97|P
+D|مالديني|Paolo Maldini|96|P
+D|بوبي مور|Bobby Moore|94|P
+D|شيريا|Gaetano Scirea|94|P
+D|روبرتو كارلوس|Roberto Carlos|94|P
+D|نيستا|Alessandro Nesta|94|P
+D|نيلتون سانتوس|Nilton Santos|94|P
+D|جالما سانتوس|Djalma Santos|94|P
+D|كافو|Cafu|93|P
+D|كانافارو|Fabio Cannavaro|93|P
+D|جون تيري|John Terry|93|P
+D|باريزي|Franco Baresi|93|P
+D|كارلوس ألبرتو|Carlos Alberto Torres|93|P
+D|فاكيتي|Giacinto Facchetti|93|P
+D|فان دايك|Virgil van Dijk|93|H
+D|راموس|Sergio Ramos|93|H
+D|بويول|Carles Puyol|92|P
+D|داني ألفيس|Dani Alves|92|P
+D|مارسيلو|Marcelo (footballer, born 1988)|92|P
+D|رونالد كومان|Ronald Koeman|92|P
+D|ستام|Jaap Stam|91|P
+D|فيليب لام|Philipp Lahm|91|P
+D|ريو فيرديناند|Rio Ferdinand|91|P
+D|تياغو سيلفا|Thiago Silva|91|P
+D|ديسايي|Marcel Desailly|91|P
+D|فيدييتش|Nemanja Vidić|91|P
+D|بريتنر|Paul Breitner|91|P
+D|ماتياس سامر|Matthias Sammer|91|P
+D|زانيتي|Javier Zanetti|91|P
+D|تورام|Lilian Thuram|90|P
+D|أشلي كول|Ashley Cole|90|P
+D|بيكيه|Gerard Piqué|90|P
+D|لوسيو|Lúcio|90|P
+D|هييرو|Fernando Hierro|90|P
+D|لوران بلان|Laurent Blanc|90|P
+D|كيللييني|Giorgio Chiellini|90|P
+D|كرول|Ruud Krol|90|P
+D|فوغتس|Berti Vogts|90|P
+D|باساريلا|Daniel Passarella|90|P
+D|روبن دياز|Rúben Dias|90|H
+D|بونوتشي|Leonardo Bonucci|89|P
+D|كولر|Jürgen Kohler|89|P
+D|حكيمي|Achraf Hakimi|89|H
+D|أرنولد|Trent Alexander-Arnold|89|H
+D|غودين|Diego Godín|88|P
+D|بيبي|Pepe (footballer, born 1983)|88|P
+D|أدامز|Tony Adams (footballer)|88|P
+D|كامبل|Sol Campbell|88|P
+D|كاراغر|Jamie Carragher|88|P
+D|إيفرا|Patrice Evra|88|P
+D|زامبروتا|Gianluca Zambrotta|88|P
+D|كوستاكورتا|Alessandro Costacurta|88|P
+D|بيرغومي|Giuseppe Bergomi|88|P
+D|جنتيلي|Claudio Gentile|88|P
+D|برامه|Andreas Brehme|88|P
+D|بريغل|Hans-Peter Briegel|88|P
+D|ليزارازو|Bixente Lizarazu|88|P
+D|ريكاردو كارفاليو|Ricardo Carvalho|88|P
+D|هوميلس|Mats Hummels|88|P
+D|صامويل|Walter Samuel|88|P
+D|بيليني|Hilderaldo Bellini|88|P
+D|ساليبا|William Saliba|88|H
+D|روديغر|Antonio Rüdiger|88|H
+D|ماركينيوس|Marquinhos (footballer, born 1994)|88|H
+D|ألدير|Aldair|87|P
+D|دي بوير|Frank de Boer|87|P
+D|فورستر|Karlheinz Förster|87|P
+D|باركزاغي|Andrea Barzagli|87|P
+D|كارفاخال|Dani Carvajal|87|H
+D|بويتينغ|Jérôme Boateng|86|P
+D|بيناتيا|Medhi Benatia|86|P
+D|غالاس|William Gallas|86|P
+D|تاسوتي|Mauro Tassotti|86|P
+D|فييرتشوفود|Pietro Vierchowod|86|P
+D|كابريني|Antonio Cabrini|86|P
+D|إروين|Denis Irwin|86|P
+D|ماكغراث|Paul McGrath (footballer)|86|P
+D|روغيري|Óscar Ruggeri|86|P
+D|بيرفومو|Roberto Perfumo|86|P
+D|أيالا|Roberto Ayala|86|P
+D|كانسيلو|João Cancelo|86|H
+D|روبرتسون|Andrew Robertson|86|H
+D|غفارديول|Joško Gvardiol|86|N
+D|غابرييل ماغالايش|Gabriel Magalhães|86|N
+D|أبيدال|Éric Abidal|85|P
+D|مونتيرو|Paolo Montero|85|P
+D|جي نيفيل|Gary Neville|85|P
+D|ستيوارت بيرس|Stuart Pearce|85|P
+D|ميرتساكر|Per Mertesacker|85|P
+D|أزبيليكويتا|César Azpilicueta|85|P
+D|فان برونكهورست|Giovanni van Bronckhorst|85|P
+D|دانيي بليند|Danny Blind|85|P
+D|إيفانوفيتش|Branislav Ivanović|85|P
+D|واكر|Kyle Walker|85|N
+D|ستونز|John Stones|85|N
+D|تيو هيرنانديز|Theo Hernandez|85|N
+D|كوليبالي|Kalidou Koulibaly|85|N
+D|كوندي|Jules Koundé|85|N
+D|كريستيان روميرو|Cristian Romero|85|N
+D|نونو مينديش|Nuno Mendes|85|N
+D|جوردي ألبا|Jordi Alba|85|N
+D|ألكورتا|Rafael Alkorta|84|P
+D|أبيلاردو|Abelardo Fernández|84|P
+D|فيراري|Ciro Ferrara|84|P
+D|فرانك لوبوف|Frank Leboeuf|84|P
+D|ليدلي كينغ|Ledley King|84|P
+D|ديفيس|Alphonso Davies|84|N
+D|ريس جيمس|Reece James|84|N
+D|لابورت|Aymeric Laporte|84|N
+D|ميليتاو|Éder Militão|84|N
+D|ليساندرو مارتينيز|Lisandro Martínez|84|N
+D|باستوني|Alessandro Bastoni|84|N
+D|أراوخو|Ronald Araújo|84|N
+D|أوباميكانو|Dayot Upamecano|84|N
+D|تاه|Jonathan Tah|84|N
+D|بريمر|Bremer (footballer)|84|N
+D|ديماركو|Federico Dimarco|84|N
+D|غريمالدو|Alejandro Grimaldo|84|N
+D|ألبيول|Raúl Albiol|83|P
+D|دي ليخت|Matthijs de Ligt|83|N
+D|دومفريس|Denzel Dumfries|83|N
+D|أكانجي|Manuel Akanji|83|N
+D|كوناتي|Ibrahima Konaté|83|N
+D|ألابا|David Alaba|83|N
+D|شلوتربيك|Nico Schlotterbeck|83|N
+D|تيمبر|Jurriën Timber|83|N
+D|أكي|Nathan Aké|83|N
+D|غيهي|Marc Guéhi|83|N
+D|سكرينيار|Milan Škriniar|83|N
+D|ميخيل سالغادو|Míchel Salgado|82|P
+D|ميتسيلدر|Christoph Metzelder|82|P
+D|ميلبيرغ|Olof Mellberg|82|P
+D|ساغنا|Bacary Sagna|82|P
+D|سيلفستر|Mikaël Silvestre|82|P
+D|ألديرفايريلد|Toby Alderweireld|82|P
+D|غامارا|Carlos Gamarra|82|P
+D|فاران|Raphaël Varane|82|N
+D|بيدرو بورو|Pedro Porro|82|N
+D|فان دي فين|Micky van de Ven|82|N
+D|كولويل|Levi Colwill|82|N
+D|بن وايت|Ben White (footballer)|82|N
+D|كالافيوري|Riccardo Calafiori|82|N
+D|بالدي|Alejandro Balde|82|N
+D|كوبارسي|Pau Cubarsí|82|N
+D|إينييغو مارتينيز|Íñigo Martínez|82|N
+D|ناتشو|Nacho Fernández|82|N
+D|خيمينيز|José María Giménez|82|N
+D|أوتامندي|Nicolás Otamendi|82|N
+D|دي لورينزو|Giovanni Di Lorenzo|82|N
+D|توموري|Fikayo Tomori|82|N
+D|لوكاس هيرنانديز|Lucas Hernandez|82|N
+D|ويليام باتشو|Willian Pacho|82|N
+D|كيمبيمبي|Presnel Kimpembe|82|N
+D|أنطونيو سيلفا|António Silva (footballer, born 2003)|82|N
+D|غيريرو|Raphaël Guerreiro|82|N
+D|هينكابي|Piero Hincapié|82|N
+D|كوكوريا|Marc Cucurella|81|N
+D|غاري ميدل|Gary Medel|80|P
+D|لوفرين|Dejan Lovren|80|P
+D|كيير|Simon Kjær|80|P
+D|كولاروف|Aleksandar Kolarov|80|P
+D|فيرتونخن|Jan Vertonghen|80|P
+D|كولو توريه|Kolo Touré|80|P
+D|ريغوبير سونغ|Rigobert Song|80|P
+D|ميندي|Ferland Mendy|80|N
+D|بافارد|Benjamin Pavard|80|N
+D|ماغواير|Harry Maguire|80|N
+D|تريبيير|Kieran Trippier|80|N
+D|كيم مين جاي|Kim Min-jae|80|N
+D|ماتيب|Joël Matip|80|N
+D|جوميز|Joe Gomez|80|N
+D|فريمبونغ|Jeremie Frimpong|80|N
+D|فوفانا|Wesley Fofana|80|N
+D|أندرسن|Joachim Andersen|80|N
+D|برانثويت|Jarrad Branthwaite|80|N
+D|باو توريس|Pau Torres|80|N
+D|بوتمان|Sven Botman|80|N
+D|لو نورمان|Robin Le Normand|80|N
+D|كريستنسن|Andreas Christensen|80|N
+D|هوييسن|Dean Huijsen|80|N
+D|ستيفان سافيتش|Stefan Savić|80|N
+D|مولينا|Nahuel Molina|80|N
+D|بوونجورنو|Alessandro Buongiorno|80|N
+D|كامبياسو|Andrea Cambiaso|80|N
+D|أتشيربي|Francesco Acerbi|80|N
+D|دي فراي|Stefan de Vrij|80|N
+D|كالولو|Pierre Kalulu|80|N
+D|رحماني|Amir Rrahmani|80|N
+D|سولي|Niklas Süle|80|N
+D|كاسترو|Castello Lukeba|80|N
+D|تودييبو|Jean-Clair Todibo|80|N
+D|دانيلو|Danilo Luiz da Silva|80|N
+D|أليكس ساندرو|Alex Sandro|80|N
+D|أكونيا|Marcos Acuña|80|N
+D|دانيلو بيريرا|Danilo Pereira|80|N
+D|إنياسيو|Gonçalo Inácio|80|N
+D|بلايند|Daley Blind|80|N
+D|هاتو|Jorrel Hato|80|N
+D|ميلينكوفيتش|Nikola Milenković|80|N
+D|كاديوغلو|Ferdi Kadıoğlu|80|N
+D|زابارني|Illia Zabarnyi|80|N
+D|أنتوني روبنسون|Antonee Robinson|80|N
+D|لوك شو|Luke Shaw|80|N
+D|دالوت|Diogo Dalot|80|N
+D|مزراوي|Noussair Mazraoui|80|N
+D|بن سباعيني|Ramy Bensebaini|80|N
+D|صايس|Romain Saïss|80|N
+D|سيماكان|Mohamed Simakan|80|N
+D|كوسونو|Odilon Kossounou|79|N
+D|ديمرال|Merih Demiral|79|N
+D|كونسا|Ezri Konsa|79|N
+D|تاركوفسكي|James Tarkowski|79|N
+D|مانشيني|Gianluca Mancini|79|N
+D|ندايكا|Evan Ndicka|79|N
+D|ماتياس غينتر|Matthias Ginter|79|N
+D|غوستو|Malo Gusto|79|N
+D|ريكاردو رودريغيز|Ricardo Rodríguez (footballer)|79|N
+D|أنتون|Waldemar Anton|79|N
+D|هانكو|David Hancko|79|N
+D|بوغيرا|Madjid Bougherra|78|P
+D|هاني رمزي|Hany Ramzy|78|P
+D|حجازي|Ahmed Hegazi|78|P
+D|بيرفيس إستوبينيان|Pervis Estupiñán|78|N
+D|ليندلوف|Victor Lindelöf|78|N
+D|ديير|Eric Dier|78|N
+D|ديفيس بن|Ben Davies (footballer, born 1993)|78|N
+D|تشالوبا|Trevoh Chalobah|78|N
+D|باديل|Benoît Badiashile|78|N
+D|زينتشينكو|Oleksandr Zinchenko|78|N
+D|تومياسو|Takehiro Tomiyasu|78|N
+D|دونك|Lewis Dunk|78|N
+D|ميتشل|Tyrick Mitchell|78|N
+D|كاش|Matty Cash|78|N
+D|دين|Lucas Digne|78|N
+D|شار|Fabian Schär|78|N
+D|أودوجي|Destiny Udogie|78|N
+D|كيركيز|Milos Kerkez|78|N
+D|تسيميكاس|Kostas Tsimikas|78|N
+D|فيفيان|Dani Vivian|78|N
+D|ديبست|Zeno Debast|78|N
+D|كاستين|Timothy Castagne|78|N
+D|جوسيب ستانيسيتش|Josip Stanišić|78|N
+D|ميه|Joakim Mæhle|78|N
+D|هين|Isak Hien|78|N
+D|دانسو|Kevin Danso|78|N
+D|إلفيدي|Nico Elvedi|78|N
+D|سوينتشو|Çağlar Söyüncü|78|N
+D|ماتفيينكو|Mykola Matviyenko|78|N
+D|دانيال مونيوز|Daniel Muñoz (footballer, born 1996)|78|N
+D|ياري مينا|Yerry Mina|78|N
+D|دافينسون سانشيز|Davinson Sánchez|78|N
+D|أوليفيرا|Mathías Olivera|78|N
+D|غوستافو غوميز|Gustavo Gómez (footballer, born 1993)|78|N
+D|مونتييل|Gonzalo Montiel|78|N
+D|تاغليافيكو|Nicolás Tagliafico|78|N
+D|أغيرد|Nayef Aguerd|78|N
+D|ماندي|Aïssa Mandi|78|N
+D|تروست إيكونغ|William Troost-Ekong|78|N
+D|نيلسون سيميدو|Nélson Semedo|78|N
+D|جيرتروي|Lutsharel Geertruida|78|N
+D|يورو|Leny Yoro|78|N
+D|فرساليكو|Šime Vrsaljko|78|P
+D|أشلي يونغ|Ashley Young|78|P
+D|ديفيد رام|David Raum|78|N
+D|كوخ|Robin Koch (footballer)|78|N
+D|معلول|Ali Maâloul|78|N
+D|فاندرسون|Vanderson|77|N
+D|مبيمبا|Chancel Mbemba|77|N
+D|كيفيور|Jakub Kiwior|77|N
+D|مونتيس|César Montes|77|N
+D|بوسخ|Stefan Posch|77|N
+D|يوسف عطال|Youcef Atal|76|N
+D|مايا يوشيدا|Maya Yoshida|76|P
+D|عبد المنعم|Mohamed Abdelmonem|76|N
+D|فيدا|Domagoj Vida|75|P
+D|حليش|Rafik Halliche|74|P
+D|حسن تمبكتي|Hassan Tambakti|74|N
+D|البليهي|Ali Al-Bulaihi|74|N
+D|الشهراني|Yasser Al-Shahrani|74|N
+M|زيدان|Zinedine Zidane|98|P
+M|رونالدينيو|Ronaldinho|96|P
+M|إنييستا|Andrés Iniesta|95|P
+M|تشافي|Xavi|95|P
+M|بلاتيني|Michel Platini|95|P
+M|دي بروين|Kevin De Bruyne|95|H
+M|ماتيوس|Lothar Matthäus|94|P
+M|كاكا|Kaká|94|P
+M|زيكو|Zico|94|P
+M|باجيو|Roberto Baggio|94|P
+M|بوبي تشارلتون|Bobby Charlton|94|P
+M|مودريتش|Luka Modrić|94|H
+M|رودري|Rodri (footballer, born 1996)|94|H
+M|بيرلو|Andrea Pirlo|93|P
+M|جيرارد|Steven Gerrard|93|P
+M|لامبارد|Frank Lampard|93|P
+M|ديل بييرو|Alessandro Del Piero|93|P
+M|غوليت|Ruud Gullit|93|P
+M|فيغو|Luís Figo|93|P
+M|كروس|Toni Kroos|93|H
+M|سكولز|Paul Scholes|92|P
+M|بوسكيتس|Sergio Busquets|92|P
+M|ريفالدو|Rivaldo|92|P
+M|توتي|Francesco Totti|92|P
+M|سقراط|Sócrates|92|P
+M|ديدي|Didi|92|P
+M|ريفيرا|Gianni Rivera|92|P
+M|ماتسولا|Sandro Mazzola|92|P
+M|هاجي|Gheorghe Hagi|92|P
+M|مايكل لاودروب|Michael Laudrup|92|P
+M|بيلينغهام|Jude Bellingham|92|H
+M|بيكهام|David Beckham|91|P
+M|فييرا|Patrick Vieira|91|P
+M|ريكيلمي|Juan Román Riquelme|91|P
+M|ألونسو|Xabi Alonso|91|P
+M|نيدفيد|Pavel Nedvěd|91|P
+M|فالكاو|Paulo Roberto Falcão|91|P
+M|رايكارد|Frank Rijkaard|91|P
+M|شفاينشتايغر|Bastian Schweinsteiger|91|P
+M|ريدوندو|Fernando Redondo|91|P
+M|روي كين|Roy Keane|91|P
+M|بيدري|Pedri|91|H
+M|ماكيليلي|Claude Makélélé|90|P
+M|سيدورف|Clarence Seedorf|90|P
+M|جيرسون|Gérson|90|P
+M|نيسكينز|Johan Neeskens|90|P
+M|شيافينو|Juan Alberto Schiaffino|90|P
+M|لويس سواريز ميرامونتيس|Luis Suárez Miramontes|90|P
+M|دنكان إدواردز|Duncan Edwards|90|P
+M|بريان روبسون|Bryan Robson|90|P
+M|غاسكوين|Paul Gascoigne|90|P
+M|تارديلي|Marco Tardelli|90|P
+M|رومي كوستا|Rui Costa|90|P
+M|ياية توريه|Yaya Touré|90|P
+M|أوكوتشا|Jay-Jay Okocha|90|P
+M|فيرتز|Florian Wirtz|90|H
+M|فالفيردي|Federico Valverde|90|H
+M|برناردو سيلفا|Bernardo Silva|90|H
+M|فودين|Phil Foden|90|H
+M|كيميتش|Joshua Kimmich|90|H
+M|ديفيد سيلفا|David Silva|89|P
+M|دي روسي|Daniele De Rossi|89|P
+M|بالاك|Michael Ballack|89|P
+M|أودغارد|Martin Ødegaard|89|H
+M|توماس مولر|Thomas Müller|89|H
+M|جاتوزو|Gennaro Gattuso|88|P
+M|ديكو|Deco|88|P
+M|دوناتوني|Roberto Donadoni|88|P
+M|ألبرتيني|Demetrio Albertini|88|P
+M|بوبان|Zvonimir Boban|88|P
+M|سافيتشيفيتش|Dejan Savićević|88|P
+M|شوستر|Bernd Schuster|88|P
+M|إيفنبرغ|Stefan Effenberg|88|P
+M|أوزيل|Mesut Özil|88|P
+M|أبو تريكة|Mohamed Aboutrika|88|P
+M|الخطيب|Mahmoud El Khatib|88|P
+M|أبيدي بيليه|Abedi Pelé|88|P
+M|براين لاودروب|Brian Laudrup|88|P
+M|جراهام سونيس|Graeme Souness|88|P
+M|غافي|Gavi (footballer)|88|H
+M|كامافينغا|Eduardo Camavinga|88|H
+M|رايس|Declan Rice|88|H
+M|كاسيميرو|Casemiro|88|H
+M|برونو فرنانديز|Bruno Fernandes|88|H
+M|كول بالمر|Cole Palmer|88|H
+M|موسيالا|Jamal Musiala|88|H
+M|راكيتيتش|Ivan Rakitić|87|P
+M|غوتي|Guti|87|P
+M|إسيان|Michael Essien|87|P
+M|محرز|Riyad Mahrez|87|N
+M|بلومي|Lakhdar Belloumi|86|P
+M|ليتبارسكي|Pierre Littbarski|86|P
+M|خضيرة|Sami Khedira|86|P
+M|كانتي|N'Golo Kanté|86|N
+M|تشالهانوغلو|Hakan Çalhanoğlu|86|N
+M|أوليسه|Michael Olise|86|N
+M|دونغا|Dunga|85|P
+M|ماكمانامان|Steve McManaman|85|P
+M|فيدال|Arturo Vidal|85|P
+M|فيتينيا|Vitinha (footballer, born 2000)|85|N
+M|بارييلا|Nicolò Barella|85|N
+M|ماك أليستر|Alexis Mac Allister|85|N
+M|دي يونغ|Frenkie de Jong|85|N
+M|غوندوغان|İlkay Gündoğan|85|N
+M|بوغبا|Paul Pogba|85|N
+M|تشواميني|Aurélien Tchouaméni|85|N
+M|سوبوسلاي|Dominik Szoboszlai|85|N
+M|برونو غيماريش|Bruno Guimarães|85|N
+M|دانيي أولمو|Dani Olmo|85|N
+M|إيسكو|Isco|85|N
+M|حاجي|Mustapha Hadji|84|P
+M|باولو سوزا|Paulo Sousa|84|P
+M|فاتينيو|Fabinho|84|N
+M|جاكا|Granit Xhaka|84|N
+M|كوتينيو|Philippe Coutinho|84|N
+M|ألكانتارا|Thiago Alcântara|84|N
+M|فيراتي|Marco Verratti|84|N
+M|إنزو فرنانديز|Enzo Fernández|84|N
+M|كايسيدو|Moisés Caicedo|84|N
+M|زوبيميندي|Martín Zubimendi|84|N
+M|فابيان رويز|Fabián Ruiz|84|N
+M|باكيتا|Lucas Paquetá|84|N
+M|جواو نيفيس|João Neves|84|N
+M|زيلينسكي|Piotr Zieliński|83|N
+M|كوفاسيتش|Mateo Kovačić|83|N
+M|بروزوفيتش|Marcelo Brozović|83|N
+M|ميلينكوفيتش سافيتش|Sergej Milinković-Savić|83|N
+M|تونالي|Sandro Tonali|83|N
+M|رابيو|Adrien Rabiot|83|N
+M|غرافنبيرخ|Ryan Gravenberch|83|N
+M|ريندرز|Tijjani Reijnders|83|N
+M|شافي سيمونز|Xavi Simons|83|N
+M|غولر|Arda Güler|83|N
+M|بارتي|Thomas Partey|83|N
+M|إريكسن|Christian Eriksen|83|N
+M|كوكي|Koke (footballer)|83|N
+M|ماديسون|James Maddison|82|N
+M|دي بول|Rodrigo De Paul|82|N
+M|مرينو|Mikel Merino|82|N
+M|يوريونتي|Marcos Llorente|82|N
+M|زاير إيميري|Warren Zaïre-Emery|82|N
+M|كامارا|Boubacar Kamara|82|N
+M|نكونكو|Christopher Nkunku|82|N
+M|دوي|Désiré Doué|82|N
+M|مايكو|Kobbie Mainoo|82|N
+M|غريليش|Jack Grealish|82|N
+M|ماكتوميناي|Scott McTominay|82|N
+M|روجرز|Morgan Rogers|82|N
+M|إيزي|Eberechi Eze|82|N
+M|بالينيا|João Palhinha|82|N
+M|روبن نيفيس|Rúben Neves|82|N
+M|بينتانكور|Rodrigo Bentancur|82|N
+M|أراسكايتا|Giorgian de Arrascaeta|82|N
+M|لوبوتكا|Stanislav Lobotka|82|N
+M|تيليمانس|Youri Tielemans|82|N
+M|كوبمينرز|Teun Koopmeiners|82|N
+M|هويبيرغ|Pierre-Emile Højbjerg|82|N
+M|كولوسيفسكي|Dejan Kulusevski|82|N
+M|سابيتسر|Marcel Sabitzer|82|N
+M|غوريتسكا|Leon Goretzka|82|N
+M|كيسيه|Franck Kessié|82|N
+M|جيمس رودريغيز|James Rodríguez|82|N
+M|زياش|Hakim Ziyech|82|N
+M|أمرابط|Sofyan Amrabat|82|N
+M|بن ناصر|Ismaël Bennacer|82|N
+M|ماتيتش|Nemanja Matić|80|P
+M|موتينيو|João Moutinho|80|P
+M|أرانغيز|Charles Aránguiz|80|P
+M|ماونت|Mason Mount|80|N
+M|غالاغر|Conor Gallagher|80|N
+M|وارتون|Adam Wharton|80|N
+M|غروس|Pascal Groß|80|N
+M|بافلوفيتش|Aleksandar Pavlović|80|N
+M|براندت|Julian Brandt|80|N
+M|فراتيسي|Davide Frattesi|80|N
+M|جورجينيو|Jorginho (Italian footballer)|80|N
+M|لوكاتيلي|Manuel Locatelli|80|N
+M|بيليغريني|Lorenzo Pellegrini|80|N
+M|مخيتاريان|Henrikh Mkhitaryan|80|N
+M|أنغيسا|André-Frank Zambo Anguissa|80|N
+M|كوني|Manu Koné|80|N
+M|فوفانا يوسف|Youssouf Fofana|80|N
+M|غيندوزي|Matteo Guendouzi|80|N
+M|شيرقي|Rayan Cherki|80|N
+M|فيرمين لوبيز|Fermín López|80|N
+M|بايينا|Álex Baena|80|N
+M|بابلو باريوس|Pablo Barrios|80|N
+M|جويلينتون|Joelinton|80|N
+M|دوغلاس لويز|Douglas Luiz|80|N
+M|جيرسون البرازيلي|Gerson (footballer, born 1997)|80|N
+M|أوغارتي|Manuel Ugarte|80|N
+M|باريديس|Leandro Paredes|80|N
+M|لو سيلسو|Giovani Lo Celso|80|N
+M|باالاسيوس|Exequiel Palacios|80|N
+M|ألمادا|Thiago Almada|80|N
+M|ماتيوس نونيس|Matheus Nunes|80|N
+M|بيدرو غونسالفيس|Pedro Gonçalves|80|N
+M|ويتسل|Axel Witsel|80|N
+M|أونانا أمادو|Amadou Onana|80|N
+M|فينالدوم|Georginio Wijnaldum|80|N
+M|كوكجو|Orkun Kökçü|80|N
+M|لايمر|Konrad Laimer|80|N
+M|بومغارتنر|Christoph Baumgartner|80|N
+M|إدريسا غاي|Idrissa Gana Gueye|80|N
+M|بابي مطر سار|Pape Matar Sarr|80|N
+M|فوفانا سيكو|Seko Fofana|80|N
+M|الدوسري|Salem Al-Dawsari|80|N
+M|لي كانغ إن|Lee Kang-in|80|N
+M|كوادرادو|Juan Cuadrado|79|P
+M|هندرسون جوردان|Jordan Henderson|79|N
+M|وارد براوس|James Ward-Prowse|79|N
+M|أندريتش|Robert Andrich|79|N
+M|إيمري جان|Emre Can|79|N
+M|ريفريلر|Remo Freuler|79|N
+M|دايتشي كامادا|Daichi Kamada|79|N
+M|هوانغ إن بوم|Hwang In-beom|79|N
+M|ماكيني|Weston McKennie|79|N
+M|تايلر آدامز|Tyler Adams (soccer)|79|N
+M|إدسون ألفاريز|Edson Álvarez|79|N
+M|سول|Saúl Ñíguez|79|N
+M|ندايدي|Wilfred Ndidi|79|N
+M|إيوبي|Alex Iwobi|79|N
+M|هيريرا|Héctor Herrera|78|P
+M|فيغولي|Sofiane Feghouli|78|P
+M|براهيمي|Yacine Brahimi|78|P
+M|تريزيغيه|Mahmoud Hassan Trezeguet|78|N
+M|ستيلر|Angelo Stiller|78|N
+M|روفيلا|Nicolò Rovella|78|N
+M|ريتشي|Samuele Ricci|78|N
+M|كريستانتي|Bryan Cristante|78|N
+M|باشاليتش|Mario Pašalić|78|N
+M|فلاشيتش|Nikola Vlašić|78|N
+M|كوستيتش|Filip Kostić|78|N
+M|بيرغه|Sander Berge|78|N
+M|سميث رو|Emile Smith Rowe|78|N
+M|ديلاني|Thomas Delaney|78|N
+M|دامسغارد|Mikkel Damsgaard|78|N
+M|فورسبيرغ|Emil Forsberg|78|N
+M|شلاجر|Xaver Schlager|78|N
+M|سيوالد|Nicolas Seiwald|78|N
+M|زكريا|Denis Zakaria|78|N
+M|إندو|Wataru Endō|78|N
+M|موريتا|Hidemasa Morita|78|N
+M|يوسف موسى|Yunus Musah|78|N
+M|أوستاكيو|Stephen Eustáquio|78|N
+M|ميغيل ألميرون|Miguel Almirón|78|N
+M|دي لا كروز|Nicolás de la Cruz|78|N
+M|توريرا|Lucas Torreira|78|N
+M|ماستانتونو|Franco Mastantuono|78|N
+M|أوتافيو|Otávio (footballer, born 1995)|78|N
+M|جواو ماريو|João Mário (footballer, born 1993)|78|N
+M|رينياتو سانشيز|Renato Sanches|78|N
+M|فكير|Nabil Fekir|78|N
+M|تولييسو|Corentin Tolisso|78|N
+M|خيفرين تورام|Khéphren Thuram|78|N
+M|أكليوش|Maghnes Akliouche|78|N
+M|سانغاري|Ibrahim Sangaré|78|N
+M|كيتا|Naby Keïta|78|N
+M|كاسادو|Marc Casadó|78|N
+M|أليكس غارسيا|Aleix García|78|N
+M|سيبالوس|Dani Ceballos|78|N
+M|مينديز برايس|Brais Méndez|78|N
+M|ماكغين|John McGinn|78|N
+M|كورتيس جونز|Curtis Jones|78|N
+M|هارفي إليوت|Harvey Elliott|78|N
+M|فيرمان|Joey Veerman|78|N
+M|فانيكين|Hans Vanaken|78|N
+M|هايدارا|Amadou Haidara|77|N
+M|ريينا|Gio Reyna|77|N
+M|هاتاتي|Reo Hatate|77|N
+M|تشافيز|Luis Chávez (footballer)|77|N
+M|هوفمان|Jonas Hofmann|77|N
+M|جاكوب رامزي|Jacob Ramsey|77|N
+M|إيبيرشر|Michel Aebischer|77|N
+M|تايدر|Saphir Taïder|76|P
+M|سيرجي روبرتو|Sergi Roberto|76|P
+M|إيليس سخيري|Ellyes Skhiri|76|N
+M|شايبي|Farès Chaïbi|76|N
+M|أوار|Houssem Aouar|76|N
+M|الفرج|Salman Al-Faraj|76|N
+M|بوداوي|Hicham Boudaoui|74|N
+M|زروقي|Ramiz Zerrouki|74|N
+M|كانو|Mohamed Kanno|74|N
+M|مجبري|Hannibal Mejbri|74|N
+M|بن طالب|Nabil Bentaleb|72|N
+M|بلقبلة|Haris Belkebla|72|N
+M|زرقان|Adem Zorgane|72|N
+F|بيليه|Pelé|99|P
+F|مارادونا|Diego Maradona|99|P
+F|ميسي|Lionel Messi|99|H
+F|كرويف|Johan Cruyff|98|P
+F|رونالدو الظاهرة|Ronaldo (Brazilian footballer)|98|P
+F|كريستيانو|Cristiano Ronaldo|98|H
+F|دي ستيفانو|Alfredo Di Stéfano|97|P
+F|فان باستن|Marco van Basten|97|P
+F|بوشكاش|Ferenc Puskás|97|P
+F|غارينشا|Garrincha|97|P
+F|جورج بيست|George Best|96|P
+F|جيرد مولر|Gerd Müller|96|P
+F|يوسيبيو|Eusébio|96|P
+F|مبابي|Kylian Mbappé|96|H
+F|هالاند|Erling Haaland|96|H
+F|هنري|Thierry Henry|95|P
+F|صلاح|Mohamed Salah|95|H
+F|بيرغكامب|Dennis Bergkamp|94|P
+F|روماريو|Romário|94|P
+F|جيرزينيو|Jairzinho|94|P
+F|ريفيلينو|Rivellino|94|P
+F|ليفاندوفسكي|Robert Lewandowski|94|H
+F|بنزيما|Karim Benzema|94|H
+F|هاري كين|Harry Kane|94|H
+F|فينيسيوس|Vinícius Júnior|94|H
+F|ميازا|Giuseppe Meazza|94|P
+F|توستاو|Tostão|93|P
+F|كيني دالغليش|Kenny Dalglish|93|P
+F|شيفتشينكو|Andriy Shevchenko|93|P
+F|راؤول|Raúl (footballer, born 1977)|93|P
+F|كانتونا|Eric Cantona|93|P
+F|روني|Wayne Rooney|93|P
+F|زلاتان|Zlatan Ibrahimović|93|P
+F|سواريز|Luis Suárez|93|H
+F|نيمار|Neymar|93|H
+F|جنتو|Francisco Gento|93|P
+F|ستانلي ماثيوز|Stanley Matthews|93|P
+F|دينيس لو|Denis Law|93|P
+F|كيفن كيغان|Kevin Keegan|92|P
+F|باتيستوتا|Gabriel Batistuta|92|P
+F|دروغبا|Didier Drogba|92|P
+F|فان نيستلروي|Ruud van Nistelrooy|92|P
+F|رومينيغه|Karl-Heinz Rummenigge|92|P
+F|غيجي ريفا|Gigi Riva|92|P
+F|كوبا|Raymond Kopa|92|P
+F|فونتين|Just Fontaine|92|P
+F|جيمي غريفز|Jimmy Greaves|92|P
+F|توم فيني|Tom Finney|92|P
+F|بيولا|Silvio Piola|92|P
+F|هنريك لارسون|Henrik Larsson|92|P
+F|هوغو سانشيز|Hugo Sánchez|92|P
+F|غاري لينيكر|Gary Lineker|91|P
+F|شيرر|Alan Shearer|91|P
+F|أوين|Michael Owen|91|P
+F|توريس|Fernando Torres|91|P
+F|كلوزه|Miroslav Klose|91|P
+F|ستويشكوف|Hristo Stoichkov|91|P
+F|ماريو كيمبس|Mario Kempes|91|P
+F|باولو روسي|Paolo Rossi|91|P
+F|أغويرو|Sergio Agüero|91|P
+F|جورج ويا|George Weah|91|P
+F|ماني|Sadio Mané|91|H
+F|غريزمان|Antoine Griezmann|91|H
+F|أوفي زيلر|Uwe Seeler|91|P
+F|كلينسمان|Jürgen Klinsmann|91|P
+F|إيتو|Samuel Eto'o|90|P
+F|فيا|David Villa|90|P
+F|هازارد|Eden Hazard|90|P
+F|إيان راش|Ian Rush|90|P
+F|بوكايو ساكا|Bukayo Saka|90|H
+F|دي ماريا|Ángel Di María|90|H
+F|سون|Son Heung-min|90|H
+F|بيبيتو|Bebeto|90|P
+F|رودي فولر|Rudi Völler|90|P
+F|بونيبيرتي|Giampiero Boniperti|90|P
+F|بابان|Jean-Pierre Papin|90|P
+F|فرانشيسكولي|Enzo Francescoli|90|P
+F|تريزيغيه|David Trezeguet|90|P
+F|كريستيان فييري|Christian Vieri|89|P
+F|زولا|Gianfranco Zola|89|P
+F|كارلوس تيفيز|Carlos Tevez|89|P
+F|كافاني|Edinson Cavani|89|P
+F|فيالي|Gianluca Vialli|88|P
+F|هيرنان كريسبو|Hernán Crespo|88|P
+F|دافور شوكر|Davor Šuker|88|P
+F|غونزالو هيغواين|Gonzalo Higuaín|88|P
+F|فورلان|Diego Forlán|88|P
+F|ديميتار برباتوف|Dimitar Berbatov|88|P
+F|روبي فاولر|Robbie Fowler|88|P
+F|ماجر|Rabah Madjer|88|P
+F|علي دائي|Ali Daei|88|P
+F|لامين يامال|Lamine Yamal|88|H
+F|لاوتارو|Lautaro Martínez|88|H
+F|لوكاكو|Romelu Lukaku|88|H
+F|جيف هيرست|Geoff Hurst|88|P
+F|بونينسيغنا|Roberto Boninsegna|88|P
+F|كاريكا|Careca|88|P
+F|كانيجيا|Claudio Caniggia|88|P
+F|سولشاير|Ole Gunnar Solskjær|88|P
+F|مانشيني اللاعب|Roberto Mancini|88|P
+F|إنزاغي|Filippo Inzaghi|87|P
+F|إيان رايت|Ian Wright|87|P
+F|روجر ميلا|Roger Milla|87|P
+F|أوسيمين|Victor Osimhen|87|N
+F|جوليان ألفاريز|Julián Álvarez|87|N
+F|ديمبيلي|Ousmane Dembélé|87|N
+F|رافينيا|Raphinha|87|N
+F|ميليتو|Diego Milito|87|P
+F|لوكا توني|Luca Toni|87|P
+F|أنيلكا|Nicolas Anelka|87|P
+F|مانزوكيتش|Mario Mandžukić|87|P
+F|أرشافين|Andrey Arshavin|87|P
+F|دوايت يورك|Dwight Yorke|86|P
+F|راشفورد|Marcus Rashford|86|N
+F|رويس|Marco Reus|86|N
+F|خفيتشا كفاراتسخيليا|Khvicha Kvaratskhelia|86|N
+F|رودريغو|Rodrygo|86|N
+F|لويس دياز|Luis Díaz|86|N
+F|رافائيل لياو|Rafael Leão|86|N
+F|هاكان شوكور|Hakan Şükür|86|P
+F|شيلاتشي|Salvatore Schillaci|86|P
+F|بيردسلي|Peter Beardsley|86|P
+F|بلانكو|Cuauhtémoc Blanco|86|P
+F|ماركيلو سالاس|Marcelo Salas|86|P
+F|زامورانو|Iván Zamorano|86|P
+F|أورتيغا|Ariel Ortega|86|P
+F|تيدي شيرينغهام|Teddy Sheringham|85|P
+F|أندي كول|Andy Cole|85|P
+F|كانو|Nwankwo Kanu|85|P
+F|حسام حسن|Hossam Hassan|85|P
+F|ماجد عبد الله|Majed Abdullah|85|P
+F|سعيد العويران|Saeed Al-Owairan|85|P
+F|ماريو غوميز|Mario Gómez|85|P
+F|لوكاس بودولسكي|Lukas Podolski|85|P
+F|ستيرلينغ|Raheem Sterling|85|N
+F|إيزاك|Alexander Isak|85|N
+F|غنابري|Serge Gnabry|85|N
+F|هافرتز|Kai Havertz|85|N
+F|ساني|Leroy Sané|85|N
+F|ميكيل أويارزابال|Mikel Oyarzabal|85|N
+F|نيكو ويليامز|Nico Williams|85|N
+F|أوليفييه جيرو|Olivier Giroud|85|P
+F|دييغو جوتا|Diogo Jota|85|N
+F|ديبالا|Paulo Dybala|85|N
+F|فيكتور غيوكيريس|Viktor Gyökeres|85|N
+F|تشيتشاريتو|Javier Hernández (footballer)|85|P
+F|فالكاو|Radamel Falcao|85|P
+F|غاكبو|Cody Gakpo|85|N
+F|بيزارو|Claudio Pizarro|84|P
+F|فيرمينو|Roberto Firmino|84|N
+F|فيليكس|João Félix|84|N
+F|غابرييل جيسوس|Gabriel Jesus|84|N
+F|مارتينيلي|Gabriel Martinelli|84|N
+F|كينغسلي كومان|Kingsley Coman|84|N
+F|بيير إيميريك أوباميانغ|Pierre-Emerick Aubameyang|84|N
+F|فلاهوفيتش|Dušan Vlahović|84|N
+F|عمر مرموش|Omar Marmoush|84|N
+F|جيلاردينو|Alberto Gilardino|84|P
+F|ساويولا|Javier Saviola|84|P
+F|أسبريلا|Faustino Asprilla|84|P
+F|بيرهوف|Oliver Bierhoff|84|P
+F|واتكنز|Ollie Watkins|84|N
+F|قدوس|Mohammed Kudus|84|N
+F|دزيكو|Edin Džeko|84|N
+F|ماركوس تورام|Marcus Thuram|83|N
+F|جيريمي دوكو|Jérémy Doku|83|N
+F|لوكمان|Ademola Lookman|83|N
+F|غوارسيو|Serhou Guirassy|83|N
+F|إيمانويل أديبايور|Emmanuel Adebayor|82|P
+F|سامي الجابر|Sami Al-Jaber|82|P
+F|ياسر القحطاني|Yasser Al-Qahtani|82|P
+F|أسينسيو|Marco Asensio|82|N
+F|ديباي|Memphis Depay|82|N
+F|نونيز|Darwin Núñez|82|N
+F|هالك|Hulk (footballer)|82|P
+F|ألفارو موراتا|Álvaro Morata|82|N
+F|بيدرو نيتو|Pedro Neto|82|N
+F|ماتيوس كونيا|Matheus Cunha|82|N
+F|لياندرو تروسار|Leandro Trossard|82|N
+F|تشيزا|Federico Chiesa|82|N
+F|إمموبيلي|Ciro Immobile|82|N
+F|أرتيم دوفبيك|Artem Dovbyk|82|N
+F|كريستيان بوليسيتش|Christian Pulisic|82|N
+F|مهدي طارمي|Mehdi Taremi|82|N
+F|تاكيفوسا كوبو|Takefusa Kubo|82|N
+F|كاورو ميتوما|Kaoru Mitoma|82|N
+F|دريس ميرتنز|Dries Mertens|82|P
+F|أليكسيس سانشيز|Alexis Sánchez|82|P
+F|كاهيل|Tim Cahill|82|P
+F|كيويل|Harry Kewell|82|P
+F|فيدوكا|Mark Viduka|82|P
+F|لافيزي|Ezequiel Lavezzi|82|P
+F|فيلتور|Sylvain Wiltord|82|P
+F|ساها|Louis Saha|82|P
+F|رافانيلي|Fabrizio Ravanelli|82|P
+F|إيليتشيتش|Josip Iličić|82|P
+F|تومسون|Jon Dahl Tomasson|82|P
+F|شيشكو|Benjamin Šeško|82|N
+F|أنتوني غوردون|Anthony Gordon|82|N
+F|بوين|Jarrod Bowen|82|N
+F|مبيومو|Bryan Mbeumo|82|N
+F|توني|Ivan Toney|82|N
+F|شيك|Patrik Schick|82|N
+F|سانتياغو خيمينيز|Santiago Giménez|82|N
+F|جوناثان ديفيد|Jonathan David|82|N
+F|براهيم دياز|Brahim Díaz|82|N
+F|ميتروفيتش|Aleksandar Mitrović|82|N
+F|أوبندا|Lois Openda|82|N
+F|ميدو|Mido (footballer)|80|P
+F|جاكسون|Nicolas Jackson|80|N
+F|فولكروغ|Niclas Füllkrug|80|N
+F|إندريك|Endrick (footballer)|80|N
+F|ريتشارليسون|Richarlison|80|N
+F|بيدرو|Pedro (footballer, born 1997)|80|N
+F|غابرييل باربوسا|Gabriel Barbosa|80|N
+F|ويليان|Willian (footballer, born 1988)|80|P
+F|أوسكار|Oscar (footballer, born 1991)|80|P
+F|باولينيو|Paulinho (footballer, born 1988)|80|P
+F|ألكسندر باتو|Alexandre Pato|80|P
+F|لوكاس مورا|Lucas Moura|80|P
+F|فيران توريس|Ferran Torres|80|N
+F|أنسو فاتي|Ansu Fati|80|N
+F|كولو مواني|Randal Kolo Muani|80|N
+F|غونزالو راموس|Gonçalo Ramos|80|N
+F|سكاماكا|Gianluca Scamacca|80|N
+F|رتيغي|Mateo Retegui|80|N
+F|ألكسندر سورلوث|Alexander Sørloth|80|N
+F|أمين غويري|Amine Gouiri|80|N
+F|يوسف النصيري|Youssef En-Nesyri|80|N
+F|سيباستيان هالر|Sébastien Haller|80|N
+F|ويلفريد زاها|Wilfried Zaha|80|N
+F|سردار أزمون|Sardar Azmoun|80|N
+F|هوانغ هي تشان|Hwang Hee-chan|80|N
+F|كروتش|Peter Crouch|80|P
+F|ليفرديناند|Les Ferdinand|80|P
+F|كانشلسكيس|Andrei Kanchelskis|80|P
+F|شاكيري|Xherdan Shaqiri|80|P
+F|بوراك يلماظ|Burak Yılmaz|80|P
+F|ماتيتا|Jean-Philippe Mateta|80|N
+F|سولانكي|Dominic Solanke|80|N
+F|فيسا|Yoane Wissa|80|N
+F|سيمينيو|Antoine Semenyo|80|N
+F|غارناتشو|Alejandro Garnacho|80|N
+F|جواو بيدرو|João Pedro (footballer, born 2001)|80|N
+F|إيكيتيكي|Hugo Ekitiké|80|N
+F|مالن|Donyell Malen|80|N
+F|بونيفاس|Victor Boniface|80|N
+F|كين موسى|Moise Kean|80|N
+F|إنسينيي|Lorenzo Insigne|80|N
+F|بيراردي|Domenico Berardi|80|N
+F|نيكو غونزاليس|Nico González|80|N
+F|نيكولاس غونزاليس|Nicolás González (footballer, born 1998)|80|N
+F|راؤول خيمينيز|Raúl Jiménez|80|N
+F|ساندي|Iliman Ndiaye|80|N
+F|سار|Ismaïla Sarr|80|N
+F|عمورة|Mohamed Amoura|80|N
+F|تاديتش|Dušan Tadić|80|N
+F|بيريشيتش|Ivan Perišić|80|N
+F|كراماريتش|Andrej Kramarić|80|N
+F|أرناوتوفيتش|Marko Arnautović|80|N
+F|رافا سيلفا|Rafa Silva|80|N
+F|بيرخفاين|Steven Bergwijn|80|N
+F|إيناكي ويليامز|Iñaki Williams|79|N
+F|ريتسو دوان|Ritsu Dōan|79|N
+F|أونداف|Deniz Undav|79|N
+F|أنخيل كوريا|Ángel Correa|79|N
+F|جيوفاني سيميوني|Giovanni Simeone|79|N
+F|إمبولو|Breel Embolo|79|N
+F|أنتوني|Antony (Brazilian footballer)|78|N
+F|خوسيلو|Joselu|78|N
+F|فرانسيسكو كونسيساو|Francisco Conceição|78|N
+F|بيلوتي|Andrea Belotti|78|N
+F|ماتيو بوليتانو|Matteo Politano|78|N
+F|فولارين بالوغون|Folarin Balogun|78|N
+F|إسلام سليماني|Islam Slimani|78|P
+F|بغداد بونجاح|Baghdad Bounedjah|78|N
+F|ريان أيت نوري|Rayan Aït-Nouri|78|N
+F|أيوب الكعبي|Ayoub El Kaabi|78|N
+F|نيكولا بيبي|Nicolas Pépé|78|N
+F|دوست|Bas Dost|78|P
+F|بنتيكي|Christian Benteke|78|P
+F|هويلوند|Rasmus Højlund|78|N
+F|زيركزي|Joshua Zirkzee|78|N
+F|أماد ديالو|Amad Diallo|78|N
+F|مادويكي|Noni Madueke|78|N
+F|برينان جونسون|Brennan Johnson|78|N
+F|أديمي|Karim Adeyemi|78|N
+F|ديميروفيتش|Ermedin Demirović|78|N
+F|بوركهارت|Jonathan Burkardt|78|N
+F|لوكيباكيو|Dodi Lukebakio|78|N
+F|ميليك|Arkadiusz Milik|78|N
+F|راسبادوري|Giacomo Raspadori|78|N
+F|كاستيانوس|Valentín Castellanos|78|N
+F|جون دوران|Jhon Durán|78|N
+F|زاباتا|Duván Zapata|78|N
+F|لوزانو|Hirving Lozano|78|N
+F|تشوكويزي|Samuel Chukwueze|78|N
+F|أدينغرا|Simon Adingra|78|N
+F|بن رحمة|Saïd Benrahma|78|N
+F|الزلزولي|Abde Ezzalzouli|78|N
+F|ندوي|Dan Ndoye|78|N
+F|مودريك|Mykhailo Mudryk|78|N
+F|سوداكوف|Georgiy Sudakov|78|N
+F|أكتوركوغلو|Kerem Aktürkoğlu|78|N
+F|غونسالو غيديس|Gonçalo Guedes|78|N
+F|أندريه سيلفا|André Silva (footballer, born 1995)|78|N
+F|لويس دي يونغ|Luuk de Jong|78|N
+F|فيغهورست|Wout Weghorst|78|N
+F|بروبي|Brian Brobbey|78|N
+F|نوا لانغ|Noa Lang|78|N
+F|دي كيتيلير|Charles De Ketelaere|78|N
+F|مصطفى محمد|Mostafa Mohamed|76|N
+F|أوريجي|Divock Origi|76|P
+F|هيسكي|Emile Heskey|76|P
+F|ياز|Roman Pavlyuchenko|76|P
+F|جيوم|Artem Dzyuba|76|P
+F|ياريمنكو|Andriy Yarmolenko|76|P
+F|أحمد موسى|Ahmed Musa|76|P
+F|أندريه أيو|André Ayew|76|P
+F|فراس البريكان|Firas Al-Buraikan|74|N
+F|بلعيلي|Youcef Belaïli|74|P
+F|دلور|Andy Delort|74|N
+F|علي لاجامي|Ali Lajami|70|N
+`;
+const COACHES = `
+فيرغسون|Alex Ferguson|30
+غوارديولا|Pep Guardiola|30
+أنشيلوتي|Carlo Ancelotti|29
+كلوب|Jürgen Klopp|27
+مورينيو|José Mourinho|26
+زيدان|Zinedine Zidane|26
+فينغر|Arsène Wenger|25
+ساكي|Arrigo Sacchi|25
+كابيلو|Fabio Capello|24
+ليبي|Marcello Lippi|24
+سيميوني|Diego Simeone|24
+إنريكي|Luis Enrique|24
+دل بوسكي|Vicente del Bosque|23
+لوف|Joachim Löw|23
+كونتي|Antonio Conte|22
+فليك|Hansi Flick|22
+رانييري|Claudio Ranieri|22
+ريكارد|Frank Rijkaard|22
+توخيل|Thomas Tuchel|21
+سلوت|Arne Slot|19
+أرتيتا|Mikel Arteta|18
+بوكيتينو|Mauricio Pochettino|18
+نيغلسمان|Julian Nagelsmann|18
+تين هاغ|Erik ten Hag|15
+كرويف|Johan Cruyff|29
+ميكيلز|Rinus Michels|28
+مات باسبي|Matt Busby|28
+بوب بيزلي|Bob Paisley|28
+بريان كلوف|Brian Clough|27
+بيل شانكلي|Bill Shankly|27
+هيلينيو هيريرا|Helenio Herrera|28
+هاينكس|Jupp Heynckes|27
+هيتسفيلد|Ottmar Hitzfeld|26
+تراباتوني|Giovanni Trapattoni|26
+فان غال|Louis van Gaal|26
+ديشان|Didier Deschamps|26
+زاغالو|Mário Zagallo|26
+هابل|Ernst Happel|26
+لوبانوفسكي|Valeriy Lobanovskyi|26
+سكولاري|Luiz Felipe Scolari|25
+بينيتيز|Rafael Benítez|25
+مانشيني|Roberto Mancini|25
+إيمري|Unai Emery|25
+رامزي|Alf Ramsey|25
+جوك ستين|Jock Stein|25
+بوبي روبسون|Bobby Robson|24
+هيدينك|Guus Hiddink|24
+أراغونيس|Luis Aragonés|24
+تيليه سانتانا|Telê Santana|24
+سكالوني|Lionel Scaloni|24
+تشابي ألونسو|Xabi Alonso|24
+سيموني إنزاغي|Simone Inzaghi|24
+باريرا|Carlos Alberto Parreira|22
+ساوثغيت|Gareth Southgate|20
+بوستيكوغلو|Ange Postecoglou|18
+ماجر|Rabah Madjer|12
+بلومي|Lakhdar Belloumi|11
+مارادونا|Diego Maradona|12
+واين روني|Wayne Rooney|10
+جيرارد|Steven Gerrard|12
+لامبارد|Frank Lampard|13
+هنري|Thierry Henry|12
+بيرلو|Andrea Pirlo|11
+سيدورف|Clarence Seedorf|9
+غاري نيفيل|Gary Neville|8
+فرانك دي بوير|Frank de Boer|11
+ستيف ماكلارين|Steve McClaren|12
+أفرام غرانت|Avram Grant|11
+لوثار ماتيوس|Lothar Matthäus|9
+روي كين|Roy Keane|12
+مارك هيوز|Mark Hughes|13
+آلان باردو|Alan Pardew|12
+سلافين بيليتش|Slaven Bilić|12
+فان نيستلروي|Ruud van Nistelrooy|12
+رابح سعدان|Rabah Saâdane|13
+`;
+const MODES = {
+  five:  {n:'فريق من 5',  money:150, form:{G:1, D:2, M:1, F:1}},
+  seven: {n:'فريق من 7',  money:250, form:{G:1, D:2, M:2, F:2}},
+  full:  {n:'فريق كامل (11)', money:500, form:{G:1, D:4, M:3, F:3}}
+};
+const POS = {G:'حارس', D:'مدافع', M:'وسط', F:'مهاجم'};
+const ORD = ['G', 'D', 'M', 'F', 'C'];
+const LBL = {G:'الحراس', D:'المدافعون', M:'الوسط', F:'المهاجمون', C:'المدرب'};
+const app = document.getElementById('app');
+const rnd = n => Math.floor(Math.random() * n);
+
+// ===== الصور من ويكيبيديا =====
+const ITEMS = {}, IMG = {};
+const WIKI = 'https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&piprop=thumbnail&pithumbsize=360&redirects=1&format=json&origin=*';
+async function wq(extra) {
+  const j = await (await fetch(WIKI + extra)).json();
+  const pg = j.query && j.query.pages;
+  if (pg) for (const k in pg) if (pg[k].thumbnail) return pg[k].thumbnail.source;
+  return null;
+}
+function getImg(it) {
+  const k = it.en;
+  if (IMG[k]) return IMG[k];
+  IMG[k] = (async () => {
+    try { const c = localStorage.getItem('img:' + k); if (c !== null) return c || null; } catch (e) {}
+    try {
+      let u = await wq('&titles=' + encodeURIComponent(k));
+      if (!u) u = await wq('&generator=search&gsrlimit=1&gsrsearch=' + encodeURIComponent(k.replace(/\s*\(.*\)/, '') + (it.t === 'c' ? ' football manager' : ' footballer')));
+      try { localStorage.setItem('img:' + k, u || ''); } catch (e) {}
+      return u;
+    } catch (e) { delete IMG[k]; return null; }
+  })();
+  return IMG[k];
+}
+const av = (it, cls) => { ITEMS[it.en] = it; return `<span class="av ${cls || ''}" data-k="${it.en}"><span>${it.name[0]}</span></span>`; };
+function hydrate() {
+  document.querySelectorAll('.av[data-k]:not([data-d])').forEach(el => {
+    el.dataset.d = 1;
+    getImg(ITEMS[el.dataset.k]).then(u => {
+      if (!u || !el.isConnected) return;
+      const im = new Image(); im.alt = '';
+      im.onload = () => { el.textContent = ''; el.appendChild(im); };
+      im.src = u;
+    });
+  });
+}
+if (typeof MutationObserver !== 'undefined') new MutationObserver(hydrate).observe(app, {childList:true});
+const ALL_P = PLAYERS.trim().split('\n').map(l => { const [pos, name, en, r, e] = l.split('|'); return {t:'p', pos, name, en, r:+r, e}; });
+const ALL_C = COACHES.trim().split('\n').map(l => { const [name, en, r] = l.split('|'); return {t:'c', name, en, r:+r}; });
+let S, lot, mode = 'seven', names = ['الفريق الأول', 'الفريق الثاني'], W = [0, 0];
+
+const cnt = (i, pos) => S.sq[i].filter(p => p.pos === pos).length;
+const open = (i, pos) => cnt(i, pos) < S.form[pos];
+const need = i => Object.keys(S.form).filter(p => open(i, p)).map(p => `${POS[p]} ×${S.form[p] - cnt(i, p)}`).join('، ');
+const slotsLeft = i => S.N + 1 - S.sq[i].length - (S.co[i] ? 1 : 0);
+const maxBid = i => S.m[i] - (slotsLeft(i) - 1); // يبقى 1 م لكل مركز ناقص
+const take = (list, item) => { list.splice(list.indexOf(item), 1); return item; };
+const give = (i, it) => it.t === 'p' ? S.sq[i].push(it) : (S.co[i] = it);
+const bonus = i => Math.round(S.co[i].r * S.N / 7);
+
+function setMode(k) { names = [n0.value || names[0], n1.value || names[1]]; mode = k; setup(); }
+
+function setup() {
+  app.innerHTML = `<h1>مزاد الأساطير</h1>
+  ${W[0] + W[1] ? `<p class="mut">النتيجة الإجمالية: ${names[0]} ${W[0]} - ${W[1]} ${names[1]}</p>` : ''}
+  <label class="mut">الفريق الأول</label><input id="n0" value="${names[0]}">
+  <label class="mut">الفريق الثاني</label><input id="n1" value="${names[1]}">
+  <label class="mut">حجم الفريق</label>
+  <div class="modes">${Object.entries(MODES).map(([k, m]) =>
+    `<button class="${k === mode ? '' : 'alt'}" onclick="setMode('${k}')">${m.n}<br><small>${m.money} مليون لكل فريق</small></button>`).join('')}</div>
+  <p class="mut">${ALL_P.length} لاعباً و${ALL_C.length} مدرباً، وتقييماتهم سرية حتى المباراة. الصور من ويكيبيديا وتحتاج إنترنت. يسير المزاد بالترتيب: الحراس ثم المدافعون ثم الوسط ثم المهاجمون ثم المدرب. كل شيء يُشترى: من يخسر المزاد على لاعب يشتري اللاعب التالي في المركز نفسه بسعر 1 م، ولا يصرف أي فريق ما يمنعه من إكمال تشكيلته.</p>
+  <button id="go">ابدأ المزاد</button>`;
+  go.onclick = () => {
+    names = [n0.value || 'الفريق 1', n1.value || 'الفريق 2'];
+    const m = MODES[mode];
+    S = {n:names, m:[m.money, m.money], sq:[[], []], co:[null, null], stage:0, lotNo:0,
+         P:[...ALL_P], C:[...ALL_C], form:m.form, N:Object.values(m.form).reduce((a, b) => a + b)};
+    next();
+  };
+}
+
+function head() {
+  const st = ORD.map((p, i) => `<span class="${i < S.stage ? 'done' : i === S.stage ? 'on' : ''}">${LBL[p]}</span>`).join('');
+  const tm = i => `<div class="team ${lot && lot.turn === i ? 'on' : ''}"><b>${S.n[i]}</b><div class="money">${S.m[i]} م</div>
+    <ul class="names">${S.sq[i].map(p => `<li>${av(p)}${p.name} (${POS[p.pos]})</li>`).join('')}
+    ${S.co[i] ? `<li>${av(S.co[i])}المدرب: ${S.co[i].name}</li>` : ''}${need(i) ? `<li class="need">ينقصه: ${need(i)}</li>` : ''}</ul></div>`;
+  return `<h1>مزاد الأساطير</h1><div class="stages">${st}</div><div class="teams">${tm(0)}${tm(1)}</div>`;
+}
+
+function next() {
+  while (S.stage < 5) {
+    const pos = ORD[S.stage];
+    const el = [0, 1].filter(i => pos === 'C' ? !S.co[i] : open(i, pos));
+    if (el.length) {
+      const item = pos === 'C' ? take(S.C, S.C[rnd(S.C.length)])
+        : (c => take(S.P, c[rnd(c.length)]))(S.P.filter(p => p.pos === pos));
+      lot = {item, el, bid:0, last:null, turn:el.length === 2 ? S.lotNo % 2 : el[0]};
+      S.lotNo++;
+      return el.length === 2 ? auction() : solo();
+    }
+    S.stage++;
+  }
+  match();
+}
+
+function lotCard(it) {
+  return `<div class="lot">${av(it, 'big')}<div class="nm">${it.name}</div>
+  <div class="meta">${it.t === 'c' ? 'مدرب، خبرته سرية' : `${POS[it.pos]} · ${it.e === 'P' ? 'من الماضي' : 'من الحاضر'} · تقييمه سري`}</div>`;
+}
+
+function solo() {
+  const w = lot.el[0];
+  app.innerHTML = head() + lotCard(lot.item) + `<p>لا ينافسك أحد على هذا المركز، يشتريه <b>${S.n[w]}</b> بسعر 1 م.</p>
+  <button onclick="resolve(${w},1)">اشترِ بـ 1 م</button></div>`;
+}
+
+function auction() {
+  const t = lot.turn, mx = maxBid(t);
+  if (lot.bid > 0 && mx <= lot.bid) return resolve(lot.last, lot.bid); // لا يستطيع الرفع: يُغلق المزاد
+  const btns = [1, 5, 10, 25].map(x => `<button onclick="raise(${lot.bid + x})" ${lot.bid + x > mx ? 'disabled' : ''}>+${x}</button>`).join('');
+  app.innerHTML = head() + lotCard(lot.item) + `
+    <div class="mut">السعر الحالي${lot.last !== null ? ` · آخر مزايد: ${S.n[lot.last]}` : ''}</div>
+    <div class="bid">${lot.bid} م</div></div>
+  <div class="panel"><p><b>الدور على ${S.n[t]}</b> <span class="mut">· أقصى مبلغ يستطيعه ${mx} م</span></p>
+    <div class="row">${btns}<button onclick="raise(${mx})" ${mx <= lot.bid ? 'disabled' : ''}>الحد الأقصى</button></div>
+    <div class="row"><input id="cb" type="number" min="${lot.bid + 1}" max="${mx}" placeholder="مبلغ آخر" style="width:140px;margin:0">
+      <button onclick="raise(+cb.value)">زايد</button>
+      <button class="alt" onclick="pass()" ${lot.bid === 0 ? 'disabled' : ''}>انسحب</button></div>
+    ${lot.bid === 0 ? '<p class="mut" style="margin-top:10px">يجب فتح المزاد بمبلغ لا يقل عن 1 م.</p>' : ''}</div>`;
+}
+function raise(v) {
+  v = Math.floor(v);
+  if (!(v > lot.bid && v <= maxBid(lot.turn))) return alert('المبلغ يجب أن يكون أعلى من السعر الحالي ولا يتجاوز الحد الأقصى.');
+  lot.bid = v; lot.last = lot.turn; lot.turn = 1 - lot.turn; auction();
+}
+function pass() { resolve(1 - lot.turn, lot.bid); }
+
+function resolve(w, price) {
+  S.m[w] -= price; give(w, lot.item);
+  lot.turn = null;
+  app.innerHTML = head() + `<div class="lot"><p><b>${S.n[w]}</b> اشترى <b>${lot.item.name}</b> بـ ${price} م.</p>
+  <button onclick="next()">التالي</button></div>`;
+}
+
+function poisson(l) { const L = Math.exp(-l); let k = 0, p = 1; do { k++; p *= Math.random(); } while (p > L); return k - 1; }
+
+function match() {
+  const P = [0, 1].map(i => ({total:S.sq[i].reduce((a, p) => a + p.r, 0) + bonus(i)}));
+  const lam = (a, b) => Math.min(4.5, 1.6 * Math.pow(a / b, 5));
+  const g = [poisson(lam(P[0].total, P[1].total)), poisson(lam(P[1].total, P[0].total))];
+  let w, pens = false;
+  if (g[0] === g[1]) { pens = true; w = Math.random() < P[0].total / (P[0].total + P[1].total) ? 0 : 1; }
+  else w = g[0] > g[1] ? 0 : 1;
+  W[w]++;
+  let d = 0;
+  const step = () => (d += .2).toFixed(2);
+  const li = (a, b) => `<li style="animation-delay:${step()}s"><span>${a}</span><b>${b}</b></li>`;
+  const col = i => `<div><h2>${S.n[i]}</h2><ul class="rev">
+    ${S.sq[i].map(p => li(`${av(p)}${p.name} (${POS[p.pos]})`, p.r)).join('')}
+    ${li(`${av(S.co[i])}المدرب ${S.co[i].name}`, '+' + bonus(i))}${li('القوة الكلية', P[i].total)}</ul></div>`;
+  app.innerHTML = `<h1>المباراة</h1><div class="teams" style="border:0">${col(0)}${col(1)}</div>
+  <div class="score" style="animation-delay:${(d += .6).toFixed(2)}s">${g[0]} - ${g[1]}${pens ? '<div class="mut">تعادل وحُسمت بركلات الترجيح</div>' : ''}</div>
+  <div class="score win" style="animation-delay:${(d += .8).toFixed(2)}s">الفائز: ${S.n[w]}<div class="mut" style="font-weight:400">النتيجة الإجمالية: ${W[0]} - ${W[1]}</div></div>
+  <p style="text-align:center;margin-top:32px"><button onclick="setup()">لعبة جديدة</button></p>`;
+}
+setup();
+</script>
+</body>
+</html>
