@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مزاد الأساطير</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c2418;--card:#143a27;--line:#2b5c42;--chalk:#f1efe4;--gold:#e8b73a;--red:#d8412f;--a:#4fb3ff;--b:#ff7a59}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% 0,#17412c,var(--bg) 60%);color:var(--chalk);font-family:Cairo,system-ui,sans-serif;min-height:100vh}
+#app{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:2.4rem;font-weight:900;margin:.2em 0;color:var(--gold)}
+h2{margin:.3em 0;font-size:1.3rem}
+.sub{opacity:.75;margin:0 0 20px}
+.box{background:var(--card);border:2px solid var(--line);border-radius:10px;padding:16px;margin:12px 0}
+input{width:100%;padding:12px;font:inherit;font-size:1.1rem;background:#0c2418;color:var(--chalk);border:2px solid var(--line);border-radius:8px;margin:6px 0 14px}
+button{font:inherit;font-weight:700;cursor:pointer;padding:12px 18px;border-radius:8px;border:2px solid var(--gold);background:var(--gold);color:#1a1a0c}
+button.alt{background:transparent;color:var(--gold)}
+button:disabled{opacity:.3;cursor:not-allowed}
+button:focus-visible,input:focus-visible{outline:3px solid var(--chalk);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.bar{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tm{border-radius:10px;padding:10px 14px;border:2px solid var(--line)}
+.tm.t0{border-color:var(--a)}.tm.t1{border-color:var(--b)}
+.tm.on{background:#1d4d35}
+.money{font-size:1.5rem;font-weight:900}
+.lot{text-align:center;padding:24px 12px;border:3px solid var(--gold);border-radius:14px;background:linear-gradient(#1b4a33,#112f20);margin:14px 0}
+.lot .nm{font-size:2.4rem;font-weight:900}
+.tag{display:inline-block;padding:3px 12px;border-radius:20px;background:#0c2418;border:1px solid var(--line);margin:4px}
+.q{font-size:1.1rem;opacity:.7}
+.bid{font-size:3rem;font-weight:900;color:var(--gold);line-height:1}
+.names{font-size:.95rem;opacity:.9;margin:6px 0 0;padding:0;list-style:none}
+.names li{padding:2px 0}
+.rev li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);opacity:0;animation:in .4s forwards}
+@keyframes in{to{opacity:1}}
+.score{font-size:4rem;font-weight:900;text-align:center;color:var(--gold);opacity:0;animation:in .8s forwards}
+.win{text-align:center;font-size:1.6rem;font-weight:900}
+@media (prefers-reduced-motion:reduce){.rev li,.score{animation-duration:.01s;animation-delay:0s!important}}
+.need{color:var(--gold);font-size:.85rem}
+input[type=number]{padding:10px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// بيانات اللاعبين: الاسم + التقييم السري + الحرف الأخير للفئة
+// P = أسطورة من الماضي | H = أسطورة من الحاضر | N = لاعب عادي (حاضر)
+// يمكنك التعديل بحرية: أضف لاعبين أو غيّر الأرقام، والفاصل هو "،"
+const RAW = {
+  G: "ياشين97P،بوفون95P،كاسياس94P،كاهن93P،شمايكل93P،زوف92P،بيتر تشيك92P،بانكس91P،فان در سار90P،نوير93H،كورتوا92H،أليسون90H،أوبلاك89H،إيدرسون88H،ماينيان88H،ترشتيغن88N،دوناروما86N،دي خيا85N،كيلور85N،ريينا85N،بونو84N،لوريس84N،نافاس83N،بيكفورد82N،سومر82N،سيزني82N،أونانا80N،رايا80N،هارت80N",
+  D: "بيكنباور97P،مالديني96P،روبرتو كارلوس94P،نيستا94P،كافو93P،كانافارو93P،تيري93P،باريزي93P،كارلوس ألبرتو93P،بويول92P،داني ألفيس92P،مارسيلو92P،ستام91P،لام91P،فيرديناند91P،ثياغو سيلفا91P،تورام90P،أشلي كول90P،بيكيه90P،فان دايك93H،راموس93H،روبن دياز90H،حكيمي89H،أرنولد89H،ساليبا88H،روديغر88H،ماركينيوس88H،كارفاخال87H،كانسيلو86H،روبرتسون86H،غفارديول86N،واكر85N،ستونز85N،تيو هيرنانديز85N،كوليبالي85N،ديفيس84N،ريس جيمس84N،لابورت84N،ميليتاو84N،ليساندرو مارتينيز84N،باستوني84N،دومفريس83N،أكانجي83N،كوناتي83N،ألابا83N،دي ليخت83N،فاران82N،بورو82N،ميندي80N،بافارد80N،ماغواير80N،تريبيير80N،كيم80N،ليندلوف78N",
+  M: "زيدان98P،رونالدينيو96P،إنييستا95P،تشافي95P،بلاتيني95P،ماتيوس94P،كاكا94P،زيكو94P،باجيو94P،بيرلو93P،جيرارد93P،لامبارد93P،ديل بييرو93P،سكولز92P،بوسكيتس92P،ريفالدو92P،توتي92P،بيكهام91P،فييرا91P،ريكيلمي91P،ألونسو91P،نيدفيد91P،ماكيليلي90P،سيدورف90P،ديفيد سيلفا89P،دي بروين95H،مودريتش94H،رودري94H،كروس93H،بيلينغهام92H،بيدري91H،فالفيردي90H،برناردو سيلفا90H،فودين90H،أودغارد89H،غافي88H،كامافينغا88H،رايس88H،كاسيميرو88H،برونو فرنانديز88H،تشالهانوغلو86N،بارييلا85N،ماك أليستر85N،غوندوغان85N،دي يونغ85N،بوغبا85N،فاتينيو84N،جاكا84N،كوتينيو84N،ألكانتارا84N،زيلينسكي83N،كوفاسيتش83N،بروزوفيتش83N،ميلينكوفيتش-سافيتش83N،ماديسون82N،دي بول82N،ماونت80N،فاتي80N",
+  F: "بيليه99P،مارادونا99P،كرويف98P،رونالدو الظاهرة98P،فان باستن97P،بوشكاش97P،بيست96P،جيرد مولر96P،يوسيبيو96P،هنري95P،بيرغكامب94P،روماريو94P،شيفتشينكو93P،راؤول93P،كانتونا93P،روني93P،زلاتان93P،باتيستوتا92P،دروغبا92P،فان نيستلروي92P،شيرر91P،لينكر91P،أوين91P،توريس91P،رومينيغه91P،كلوزه91P،إيتو90P،فيا90P،هازارد90P،ميسي99H،كريستيانو98H،مبابي96H،هالاند96H،صلاح95H،ليفاندوفسكي94H،بنزيما94H،هاري كين94H،فينيسيوس94H،نيمار93H،سواريز93H،ماني91H،غريزمان91H،دي ماريا90H،سون90H،لامين يامال88H،موسيالا88H،لاوتارو88H،لوكاكو88H،أوسيمين87N،ألفاريز87N،ديمبيلي87N،راشفورد86N،ستيرلينغ85N،إيزاك85N،رويس86N،غنابري85N،هافرتز85N،أولمو85N،فيرمينو84N،فيليكس84N،جيسوس84N،أسينسيو82N،ديباي82N،نونيز82N،جاكسون80N"
+};
+
+// المدربون: الاسم + نقاط الخبرة السرية (تُضاف لقوة الفريق)
+const COACHES = "فيرغسون30،غوارديولا30،أنشيلوتي29،كلوب27،مورينيو26،زيدان26،فينغر25،ساكي25،كابيلو24،ليبي24،سيميوني24،إنريكي24،دل بوسكي23،لوف23،كونتي22،فليك22،رانييري22،ريكارد22،توخيل21،سلوت19،أرتيتا18،بوكيتينو18،نيغلسمان18،تين هاغ15";
+
+const SIZE = 7, START = 250, GK_PENALTY = 20;
+const FORM = {G:1, D:2, M:2, F:2};
+const POS = {G:'حارس', D:'مدافع', M:'وسط', F:'مهاجم'};
+const app = document.getElementById('app');
+const rnd = n => Math.floor(Math.random() * n);
+const ALL_P = [], ALL_C = [];
+for (const p in RAW) RAW[p].split('،').forEach(s => {
+  const m = s.trim().match(/^(.*?)(\d+)([PHN])$/);
+  ALL_P.push({t:'p', name:m[1], pos:p, r:+m[2], e:m[3]});
+});
+COACHES.split('،').forEach(s => {
+  const m = s.trim().match(/^(.*?)(\d+)$/);
+  ALL_C.push({t:'c', name:m[1], r:+m[2]});
+});
+let S, lot, names = ['الفريق الأزرق', 'الفريق البرتقالي'], W = [0, 0];
+
+const cnt = (i, pos) => S.sq[i].filter(p => p.pos === pos).length;
+const open = (i, pos) => cnt(i, pos) < FORM[pos];
+const need = i => Object.keys(FORM).filter(p => open(i, p)).map(p => `${POS[p]} ×${FORM[p] - cnt(i, p)}`).join('، ');
+
+function setup() {
+  app.innerHTML = `<h1>مزاد الأساطير</h1>
+  <p class="sub">${ALL_P.length} لاعباً و${ALL_C.length} مدرباً، وتقييماتهم سرية حتى صافرة المباراة.${W[0] + W[1] ? ` النتيجة الإجمالية: ${names[0]} ${W[0]} - ${W[1]} ${names[1]}` : ''}</p>
+  <div class="box">
+    <label>اسم الفريق الأول</label><input id="n0" value="${names[0]}">
+    <label>اسم الفريق الثاني</label><input id="n1" value="${names[1]}">
+    <p class="sub">لكل فريق ${START} مليون، والتشكيلة 1-2-2-2 (حارس و2 مدافع و2 وسط و2 مهاجم). في كل جولة يُعرض لاعب في مركز يحتاجه الفريقان، ومن يخسر المزاد يحصل مجاناً على لاعب عشوائي في مركز ناقص عنده. بعد اكتمال التشكيلتين يُباع مدرب بما تبقى من نقود، فلا تصرف كل شيء مبكراً.</p>
+    <button id="go">ابدأ المزاد</button>
+  </div>`;
+  go.onclick = () => {
+    names = [n0.value || 'الفريق 1', n1.value || 'الفريق 2'];
+    S = {n:names, m:[START, START], sq:[[], []], co:[null, null], round:0, P:[...ALL_P], C:[...ALL_C]};
+    next();
+  };
+}
+
+function take(list, item) { list.splice(list.indexOf(item), 1); return item; }
+function give(i, it) { it.t === 'p' ? S.sq[i].push(it) : S.co[i] = it; }
+
+function next() {
+  if (S.round > SIZE) return match();
+  let item, k = 'P';
+  if (S.round < SIZE) {
+    const ok = Object.keys(FORM).filter(p => open(0, p) && open(1, p));
+    if (!ok.length) return autofill();
+    const c = S.P.filter(p => ok.includes(p.pos));
+    item = take(S.P, c[rnd(c.length)]);
+  } else { k = 'C'; item = take(S.C, S.C[rnd(S.C.length)]); }
+  let turn = S.round % 2;
+  if (S.m[turn] < 1) turn = 1 - turn;
+  lot = {item, k, bid:0, turn, last:null};
+  if (S.m[turn] < 1) return resolve(rnd(2), 0);
+  auction();
+}
+
+function autofill() {
+  const got = [0, 1].map(i => {
+    const c = S.P.filter(p => open(i, p.pos));
+    const p = take(S.P, c[rnd(c.length)]); give(i, p); return p;
+  });
+  S.round++;
+  app.innerHTML = `<h2>جولة تعبئة</h2><div class="bar">${team(0)}${team(1)}</div>
+  <div class="box"><p>لم يبقَ مركز يحتاجه الفريقان معاً، فاستلم كل فريق لاعباً عشوائياً في مركزه الناقص:</p>
+  <p><b>${S.n[0]}</b>: ${got[0].name} (${POS[got[0].pos]})</p><p><b>${S.n[1]}</b>: ${got[1].name} (${POS[got[1].pos]})</p>
+  <button onclick="next()">${S.round > SIZE ? 'ابدأ المباراة' : 'التالي'}</button></div>`;
+}
+
+function team(i) {
+  const list = S.sq[i].map(p => `<li>${p.name} <small>(${POS[p.pos]})</small></li>`).join('');
+  const c = S.co[i] ? `<li>المدرب: ${S.co[i].name}</li>` : '';
+  const n = S.round < SIZE && need(i) ? `<li class="need">ينقصه: ${need(i)}</li>` : '';
+  return `<div class="tm t${i} ${lot && lot.turn === i ? 'on' : ''}"><b>${S.n[i]}</b>
+    <div class="money">${S.m[i]} م</div><ul class="names">${list}${c}${n}</ul></div>`;
+}
+
+function auction() {
+  const it = lot.item, t = lot.turn, isC = it.t === 'c';
+  if (lot.bid > 0 && S.m[t] <= lot.bid) return resolve(lot.last, lot.bid); // لا يستطيع الرفع: يُغلق المزاد
+  const btns = [1, 5, 10, 25].map(x =>
+    `<button onclick="raise(${lot.bid + x})" ${lot.bid + x > S.m[t] ? 'disabled' : ''}>+${x}</button>`).join('');
+  app.innerHTML = `<h2>${isC ? 'مزاد المدرب' : `الجولة ${S.round + 1} من ${SIZE}`}</h2>
+  <div class="bar">${team(0)}${team(1)}</div>
+  <div class="lot">
+    <div class="nm">${it.name}</div>
+    ${isC ? '<span class="tag">مدرب</span>' : `<span class="tag">${POS[it.pos]}</span><span class="tag">${it.e === 'P' ? 'من الماضي' : 'من الحاضر'}</span>`}
+    <div class="q">${isC ? 'خبرته سرية' : 'تقييمه سري'}</div>
+    <p>السعر الحالي${lot.last !== null ? ` (آخر مزايد: ${S.n[lot.last]})` : ''}</p><div class="bid">${lot.bid} م</div>
+  </div>
+  <div class="box"><b>الدور على: ${S.n[t]}</b> <small>(يملك ${S.m[t]} م)</small>
+    <div class="row" style="margin:10px 0">${btns}<button onclick="raise(${S.m[t]})" ${S.m[t] <= lot.bid ? 'disabled' : ''}>كل ما أملك</button></div>
+    <div class="row"><input id="cb" type="number" min="${lot.bid + 1}" max="${S.m[t]}" placeholder="مبلغ آخر" style="width:140px;margin:0">
+      <button onclick="raise(+cb.value)">زايد بهذا المبلغ</button>
+      <button class="alt" onclick="pass()" ${lot.bid === 0 ? 'disabled' : ''}>انسحب</button></div>
+    <p class="sub" style="margin:10px 0 0">${lot.bid === 0 ? 'يجب فتح المزاد بمبلغ لا يقل عن 1 م. ' : ''}${isC ? '' : 'تذكير: ستحتاج مالاً لشراء المدرب بعد انتهاء اللاعبين.'}</p>
+  </div>`;
+}
+function raise(v) {
+  v = Math.floor(v);
+  if (!(v > lot.bid && v <= S.m[lot.turn])) return alert('المبلغ يجب أن يكون أعلى من السعر الحالي ولا يتجاوز رصيدك.');
+  lot.bid = v; lot.last = lot.turn; lot.turn = 1 - lot.turn; auction();
+}
+function pass() { resolve(1 - lot.turn, lot.bid); }
+
+function resolve(w, price) {
+  const l = 1 - w, it = lot.item;
+  S.m[w] -= price; give(w, it);
+  const c = lot.k === 'C' ? S.C : S.P.filter(p => open(l, p.pos));
+  const comp = lot.k === 'C' ? take(S.C, c[rnd(c.length)]) : take(S.P, c[rnd(c.length)]);
+  give(l, comp);
+  S.round++;
+  app.innerHTML = `<h2>انتهى المزاد</h2><div class="bar">${team(0)}${team(1)}</div>
+  <div class="box"><p><b>${S.n[w]}</b> فاز بـ <b>${it.name}</b> مقابل ${price} م.</p>
+  <p><b>${S.n[l]}</b> حصل على <b>${comp.name}</b> مجاناً.</p>
+  <button onclick="next()">${S.round > SIZE ? 'ابدأ المباراة' : 'التالي'}</button></div>`;
+}
+
+function poisson(l) { const L = Math.exp(-l); let k = 0, p = 1; do { k++; p *= Math.random(); } while (p > L); return k - 1; }
+
+function match() {
+  const P = [0, 1].map(i => {
+    const sum = S.sq[i].reduce((a, p) => a + p.r, 0);
+    return {sum, total:sum + S.co[i].r};
+  });
+  const lam = (a, b) => Math.min(4.5, 1.6 * Math.pow(a / b, 5));
+  const g = [poisson(lam(P[0].total, P[1].total)), poisson(lam(P[1].total, P[0].total))];
+  let w, pens = false;
+  if (g[0] === g[1]) { pens = true; w = Math.random() < P[0].total / (P[0].total + P[1].total) ? 0 : 1; }
+  else w = g[0] > g[1] ? 0 : 1;
+  W[w]++;
+  let d = 0;
+  const step = () => (d += .25).toFixed(2);
+  const col = i => `<div class="box tm t${i}"><h2>${S.n[i]}</h2><ul class="names rev" style="opacity:1">
+    ${S.sq[i].map(p => `<li style="animation-delay:${step()}s"><span>${p.name} (${POS[p.pos]})</span><b>${p.r}</b></li>`).join('')}
+    <li style="animation-delay:${step()}s"><span>المدرب ${S.co[i].name}</span><b>+${S.co[i].r}</b></li>
+    <li style="animation-delay:${step()}s"><span><b>القوة الكلية</b></span><b>${P[i].total}</b></li></ul></div>`;
+  app.innerHTML = `<h1>المباراة</h1><div class="bar">${col(0)}${col(1)}</div>
+  <div class="score" style="animation-delay:${(d += .6).toFixed(2)}s">${g[0]} - ${g[1]}${pens ? '<div style="font-size:1.1rem">تعادل وحُسمت بركلات الترجيح</div>' : ''}</div>
+  <div class="win score" style="animation-delay:${(d += .8).toFixed(2)}s">الفائز: ${S.n[w]}<div style="font-size:1rem;opacity:.8">النتيجة الإجمالية: ${W[0]} - ${W[1]}</div></div>
+  <p style="text-align:center;margin-top:24px"><button onclick="setup()">لعبة جديدة</button></p>`;
+}
+setup();
+</script>
+</body>
+</html>
