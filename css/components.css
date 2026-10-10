@@ -1,22 +1,26 @@
 /* ===== الشريط العلوي ===== */
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 12px}
-.brand{display:flex;align-items:center;gap:8px;font-weight:900;font-size:1.1rem;white-space:nowrap}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;height:59px;padding:0 0 3px;margin-bottom:16px;color:#fff}
+.brand{display:flex;align-items:center;gap:8px;font-weight:900;font-size:1.15rem;white-space:nowrap;letter-spacing:.01em}
+.brand svg{color:var(--gold)}
 .tools{display:flex;align-items:center;gap:8px}
 .chip{display:inline-block;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-s);padding:2px 10px;font-size:.85rem}
-.chip .num{font-size:1.15rem}
+.chip .num{font-size:1.2rem}
+.top .chip{background:#ffffff14;border-color:#ffffff33;color:#fff}
+.top .icon-btn{color:#fff;border-color:#ffffff40}
+.top .icon-btn:hover:not(:disabled){background:#ffffff1f;color:#fff;border-color:#fff}
 
 /* ===== الأزرار ===== */
-button{font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;padding:9px 18px;border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:var(--r-s);transition:background .15s,transform .1s}
-button:hover:not(:disabled){background:var(--slate);border-color:var(--slate)}
+button{font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;padding:9px 18px;border:1px solid var(--blue);background:var(--blue);color:#fff;border-radius:var(--r-s);transition:background .15s,transform .1s,box-shadow .15s}
+button:hover:not(:disabled){background:var(--navy2);border-color:var(--navy2);box-shadow:0 6px 16px -8px rgba(10,58,140,.7)}
 button:active:not(:disabled){transform:translateY(1px)}
-button.alt{background:transparent;color:var(--ink);border-color:var(--line)}
-button.alt:hover:not(:disabled){background:var(--surface);border-color:var(--ink);color:var(--ink)}
+button.alt{background:transparent;color:var(--blue);border-color:#B8C2D4;box-shadow:none}
+button.alt:hover:not(:disabled){background:var(--surface);border-color:var(--blue);color:var(--blue);box-shadow:none}
 button.sm,.icon-btn{padding:3px 12px;font-size:.85rem}
 .icon-btn{background:transparent;color:var(--ink);border:1px solid var(--line);display:inline-flex;align-items:center;gap:6px}
-.icon-btn:hover:not(:disabled){background:var(--surface);color:var(--ink);border-color:var(--ink)}
+.icon-btn:hover:not(:disabled){background:var(--surface);color:var(--blue);border-color:var(--blue);box-shadow:none}
 button.go{font-size:1.1rem;padding:12px 30px}
 button:disabled{opacity:.3;cursor:not-allowed}
-button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+button:focus-visible,input:focus-visible{outline:2px solid var(--steel);outline-offset:2px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
 .row.c{justify-content:center}
 input{font:inherit;font-weight:600;width:100%;padding:8px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r-s)}
@@ -28,11 +32,11 @@ input[type=number]{width:140px}
 .av img{width:100%;height:100%;object-fit:cover;display:block}
 
 /* ===== بطاقة اللاعب (على طريقة FIFA) ===== */
-.fc{--w:220px;--shape:polygon(13% 0,87% 0,100% 6%,100% 87%,50% 100%,0 87%,0 6%);width:var(--w);height:calc(var(--w) * 1.4);font-size:calc(var(--w) * .0727);position:relative;flex:none;background:var(--ink);clip-path:var(--shape)}
-.fc-in{position:absolute;inset:2px;clip-path:var(--shape);background:linear-gradient(165deg,#fff 0,#F1EFE7 100%);color:var(--ink);overflow:hidden}
-.fc.past{background:#B9B29C}
-.fc.past .fc-in{background:linear-gradient(165deg,#3A3A40 0,#161618 100%);color:#F6F5F0}
-.fc.coach .fc-in{background:linear-gradient(165deg,#E9E5D8 0,#D8D3C2 100%)}
+.fc{--w:220px;--shape:polygon(13% 0,87% 0,100% 6%,100% 87%,50% 100%,0 87%,0 6%);width:var(--w);height:calc(var(--w) * 1.4);font-size:calc(var(--w) * .0727);position:relative;flex:none;background:var(--navy);clip-path:var(--shape);filter:drop-shadow(0 10px 14px rgba(2,15,42,.25))}
+.fc-in{position:absolute;inset:2px;clip-path:var(--shape);background:linear-gradient(165deg,#fff 0,#E4E9F2 100%);color:var(--ink);overflow:hidden}
+.fc.past{background:var(--gold)}
+.fc.past .fc-in{background:linear-gradient(165deg,#16305F 0,#020F2A 100%);color:#fff}
+.fc.coach .fc-in{background:linear-gradient(165deg,#E7ECF5 0,#CDD6E8 100%)}
 .fc-top{position:absolute;top:10%;inset-inline-start:10%;text-align:center;line-height:1}
 .fc-r{font-size:3.1em}
 .fc-r.hid{font-family:Cairo,sans-serif;font-size:2.4em;opacity:.55}
