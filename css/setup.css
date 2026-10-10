@@ -1,0 +1,29 @@
+/* ===== الإعداد ===== */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:24px;padding:8px 0 4px}
+.hero h1{font-size:3rem;font-weight:900;line-height:1.1;margin-bottom:10px}
+.hero p{color:var(--mut);font-size:1.05rem;max-width:34ch}
+.fan{position:relative;height:300px;overflow:hidden}
+.fan .fc{--w:150px;position:absolute;top:30px;left:50%;margin-left:-75px;transform-origin:50% 100%}
+.fan .fc:nth-child(1){transform:translateX(-104px) rotate(-9deg)}
+.fan .fc:nth-child(2){transform:translateY(-14px);z-index:2}
+.fan .fc:nth-child(3){transform:translateX(104px) rotate(9deg)}
+.teams2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tb label{display:block;font-size:.85rem;color:var(--mut);margin-bottom:4px}
+.sws{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.swb{width:26px;height:26px;padding:0;border-radius:var(--r-s);background:var(--c);border:2px solid var(--surface);outline:1px solid var(--line)}
+.swb:hover:not(:disabled){background:var(--c);border-color:var(--surface);outline-color:var(--ink)}
+.swb[aria-pressed=true]{outline:2px solid var(--ink)}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.modes button,.lgs button{background:var(--surface);color:var(--ink);border:1px solid var(--line);text-align:right;font-weight:600}
+.modes button[aria-pressed=true],.lgs button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.modes button:hover:not(:disabled),.lgs button:hover:not(:disabled){border-color:var(--ink);background:var(--surface);color:var(--ink)}
+.modes button[aria-pressed=true]:hover,.lgs button[aria-pressed=true]:hover{background:var(--slate);color:#fff}
+.modes button>small{display:block;opacity:.75;font-weight:600}
+.lgs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.lgs button{padding:6px 12px}
+.lgs small{margin-inline-start:6px;opacity:.7}
+.sec{font-size:.85rem;color:var(--mut);margin:16px 0 6px}
+.warn{font-weight:700}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;list-style:none;margin:16px 0 4px;padding:0;font-size:.9rem}
+.how li{display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--bg);border-radius:var(--r-s)}
+.how svg{flex:none;margin-top:3px}

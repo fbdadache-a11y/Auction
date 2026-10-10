@@ -1,0 +1,35 @@
+/* ===== حركة ===== */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes popin{from{transform:scale(0) rotate(-25deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes dealin{from{opacity:0;transform:translateY(-34px) rotate(-5deg) scale(.92)}to{opacity:1;transform:none}}
+@keyframes blink{50%{background:rgba(255,255,255,.18)}}
+.enter{animation:rise .4s both}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* ===== الشاشات الصغيرة ===== */
+@media (max-width:720px){
+  .top .chip{display:none}
+  .sbh{flex-wrap:wrap;gap:2px 8px}.sbn{white-space:normal;line-height:1.25}
+  .fan .fc{--w:132px;margin-left:-66px}
+  .fan .fc:nth-child(1){transform:translateX(-84px) rotate(-9deg)}
+  .fan .fc:nth-child(3){transform:translateX(84px) rotate(9deg)}
+  .hero{grid-template-columns:1fr}.hero h1{font-size:2.3rem}.fan{height:250px}
+  .stage{grid-template-columns:1fr;justify-items:center;gap:16px}
+  .stage>.panel,.stage>div:last-child{width:100%}
+  .price{font-size:4.8rem}
+  .pair{grid-template-columns:1fr;max-width:420px;margin-inline:auto}
+  .sbt{padding:8px 10px 10px}.sbm{font-size:2.2rem}.sbn{font-size:.9rem}
+  .sbc{padding:6px 8px}.sbc .st{font-size:.85rem}
+  .teams2,.modes,.how{grid-template-columns:1fr}
+  .sb.live .sbm{font-size:3.6rem}.clock{font-size:2.2rem}.final .fs{font-size:4rem}
+}
+
+/* ===== Lenis والكرة ثلاثية الأبعاد ===== */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+.hero-t{display:flex;align-items:center;gap:18px}
+#ball{display:none;width:120px;height:120px;flex:none}
+@media (max-width:720px){#ball{width:84px;height:84px}}

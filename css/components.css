@@ -1,0 +1,48 @@
+/* ===== الشريط العلوي ===== */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 12px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:900;font-size:1.1rem;white-space:nowrap}
+.tools{display:flex;align-items:center;gap:8px}
+.chip{display:inline-block;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-s);padding:2px 10px;font-size:.85rem}
+.chip .num{font-size:1.15rem}
+
+/* ===== الأزرار ===== */
+button{font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;padding:9px 18px;border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:var(--r-s);transition:background .15s,transform .1s}
+button:hover:not(:disabled){background:var(--slate);border-color:var(--slate)}
+button:active:not(:disabled){transform:translateY(1px)}
+button.alt{background:transparent;color:var(--ink);border-color:var(--line)}
+button.alt:hover:not(:disabled){background:var(--surface);border-color:var(--ink);color:var(--ink)}
+button.sm,.icon-btn{padding:3px 12px;font-size:.85rem}
+.icon-btn{background:transparent;color:var(--ink);border:1px solid var(--line);display:inline-flex;align-items:center;gap:6px}
+.icon-btn:hover:not(:disabled){background:var(--surface);color:var(--ink);border-color:var(--ink)}
+button.go{font-size:1.1rem;padding:12px 30px}
+button:disabled{opacity:.3;cursor:not-allowed}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.row.c{justify-content:center}
+input{font:inherit;font-weight:600;width:100%;padding:8px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r-s)}
+input[type=number]{width:140px}
+.err{font-weight:700;margin-top:8px}
+
+/* ===== الصور ===== */
+.av{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;flex:none;border-radius:var(--r-s);background:var(--bg);border:1px solid var(--line);overflow:hidden;font-size:.75rem;color:var(--mut);font-weight:700}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ===== بطاقة اللاعب (على طريقة FIFA) ===== */
+.fc{--w:220px;--shape:polygon(13% 0,87% 0,100% 6%,100% 87%,50% 100%,0 87%,0 6%);width:var(--w);height:calc(var(--w) * 1.4);font-size:calc(var(--w) * .0727);position:relative;flex:none;background:var(--ink);clip-path:var(--shape)}
+.fc-in{position:absolute;inset:2px;clip-path:var(--shape);background:linear-gradient(165deg,#fff 0,#F1EFE7 100%);color:var(--ink);overflow:hidden}
+.fc.past{background:#B9B29C}
+.fc.past .fc-in{background:linear-gradient(165deg,#3A3A40 0,#161618 100%);color:#F6F5F0}
+.fc.coach .fc-in{background:linear-gradient(165deg,#E9E5D8 0,#D8D3C2 100%)}
+.fc-top{position:absolute;top:10%;inset-inline-start:10%;text-align:center;line-height:1}
+.fc-r{font-size:3.1em}
+.fc-r.hid{font-family:Cairo,sans-serif;font-size:2.4em;opacity:.55}
+.fc-p{font-size:.85em;font-weight:900;margin-top:2px}
+.fc-ph{position:absolute;top:8%;inset-inline-end:5%;width:62%;height:52%}
+.fc-ph .av{width:100%;height:100%;border:0;background:transparent;font-size:3.2em;border-radius:0;-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
+.fc-ph .av img{object-position:center top}
+.fc-nm{position:absolute;bottom:19%;inset-inline:7%;text-align:center;font-weight:900;font-size:1.3em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fc-lg{position:absolute;bottom:10%;inset-inline:4%;text-align:center;font-size:.72em;opacity:.7;white-space:nowrap}
+.fc.fresh{animation:dealin .5s cubic-bezier(.2,1.2,.4,1) both}
+.stamp-w{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:3}
+.stamp{transform:rotate(-8deg);border:4px solid var(--kit);color:var(--kit);background:rgba(255,255,255,.94);font-weight:900;font-size:1.7em;padding:2px 16px;border-radius:var(--r);text-align:center;line-height:1.25;white-space:nowrap}
+.stamp small{display:block;font-size:.5em;color:var(--ink)}
