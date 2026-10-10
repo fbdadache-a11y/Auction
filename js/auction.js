@@ -69,7 +69,7 @@ function resolve(w, price) {
     const el = it.t === 'c' ? document.querySelectorAll('.coach-row')[w] : [...document.querySelectorAll('.slot.filled')].find(e => e.dataset.id === it.en);
     const pk = el && (el.querySelector('.pk') || el);
     if (pk) pk.classList.add('pop');
-    fx.boom({particleCount:45, spread:75, startVelocity:32, origin:fx.at(el), colors:[S.k[w], '#ffffff', '#161618']});
+    fx.boom({particleCount:45, spread:75, startVelocity:32, origin:fx.at(el), colors:[S.k[w], '#ffffff', '#C9A24B']});
   });
 }
 

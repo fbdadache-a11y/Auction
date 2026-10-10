@@ -83,11 +83,11 @@ function live() {
         <div class="fw">الفائز: ${T(w)}</div><div class="fs num">${pair(R.g[0], R.g[1])}</div>
         ${R.pens ? `<p class="sub">تعادل وحُسمت بركلات الترجيح ${pair(R.pens[0], R.pens[1])}</p>` : ''}
         <p class="sub">النتيجة الإجمالية بين الفريقين ${pair(W[0], W[1])}</p>
-        <div class="row c"><button id="again" class="go" style="background:#fff;color:#161618;border-color:#fff">مباراة أخرى بنفس التشكيلتين</button><button class="alt" id="newg" style="color:#fff;border-color:#ffffff66">لعبة جديدة</button></div></section>`;
+        <div class="row c"><button id="again" class="go" style="background:#fff;color:#020F2A;border-color:#fff">مباراة أخرى بنفس التشكيلتين</button><button class="alt" id="newg" style="color:#fff;border-color:#ffffff66">لعبة جديدة</button></div></section>`;
       fx.icons();
       $('again').onclick = () => match(true);
       $('newg').onclick = setup;
-      fx.cannons([S.k[w], '#ffffff', '#161618'], 2400);
+      fx.cannons([S.k[w], '#ffffff', '#C9A24B'], 2400);
       try { LEN ? LEN.scrollTo($('fin'), {offset:-120}) : $('fin').scrollIntoView({behavior:reduced ? 'auto' : 'smooth', block:'center'}); } catch (e) {}
     };
     const step = () => {
