@@ -4,6 +4,8 @@ const MODES = {
   seven:{n:'فريق من 7', money:250, form:{G:1, D:2, M:2, F:2}},
   full: {n:'فريق كامل (11)', money:500, form:{G:1, D:4, M:3, F:3}}
 };
+// طور الأساطير: 11 لاعباً بميزانية مليار، ولا يظهر فيه إلا الأساطير (الماضي والنجوم الكبار بتقييم ≥ 88)
+const LEGENDS = {n:'طور الأساطير', money:1000, form:MODES.full.form, inc:[5, 25, 100], minp:5, minR:88, minC:26};
 // مواضع اللاعبين على الملعب كنسب مئوية (x من اليسار، y من الأعلى)
 const FORM_XY = {
   five: {G:[[50,86]], D:[[28,64],[72,64]], M:[[50,42]], F:[[50,18]]},
@@ -33,9 +35,12 @@ const pair = (a, b) => `<span class="pr"><b>${a}</b><i>-</i><b>${b}</b></span>`;
 
 const ALL_P = PLAYERS.trim().split('\n').map(l => { const [pos, name, en, r, e, lg] = l.split('|'); return {t:'p', pos, name, en, r:+r, e, lg}; });
 const ALL_C = COACHES.trim().split('\n').map(l => { const [name, en, r] = l.split('|'); return {t:'c', name, en, r:+r}; });
+const isLegend = p => p.e !== 'N' && p.r >= LEGENDS.minR;
+const LEG_C = ALL_C.filter(c => c.r >= LEGENDS.minC);
+const LEG_P = ALL_P.filter(isLegend);
 const LGCOUNT = {}; ALL_P.forEach(p => LGCOUNT[p.lg] = (LGCOUNT[p.lg] || 0) + 1);
 
-let S, lot, TM = null, mode = 'seven', names = ['الفريق الأول', 'الفريق الثاني'], kits = [KITS[0], KITS[3]], W = [0, 0];
+let S, lot, TM = null, edition = 'classic', mode = 'seven', names = ['الفريق الأول', 'الفريق الثاني'], kits = [KITS[0], KITS[3]], W = [0, 0];
 let lgs = new Set(Object.keys(LG)), muted = false;
 try { muted = localStorage.getItem('muted') === '1'; } catch (e) {}
 const reduced = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;

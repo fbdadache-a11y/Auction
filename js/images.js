@@ -41,4 +41,4 @@ function hydrate() {
     });
   });
 }
-function render(html, after) { app.innerHTML = html; fx.icons(); hydrate(); if (after) after(); }
+function render(html, after) { document.body.classList.remove('home-on'); app.innerHTML = html; fx.icons(); hydrate(); if (after) after(); }

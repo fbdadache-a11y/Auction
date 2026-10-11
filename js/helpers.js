@@ -4,7 +4,7 @@ const cnt = (i, pos) => S.sq[i].filter(p => p.pos === pos).length;
 const open = (i, pos) => cnt(i, pos) < S.form[pos];
 const need = i => Object.keys(S.form).filter(p => open(i, p)).map(p => `${POS[p]} ×${S.form[p] - cnt(i, p)}`).join('، ');
 const slotsLeft = i => S.N + 1 - S.sq[i].length - (S.co[i] ? 1 : 0);
-const maxBid = i => S.m[i] - (slotsLeft(i) - 1); // يبقى 1M لكل مركز ناقص
+const maxBid = i => S.m[i] - (slotsLeft(i) - 1) * S.minp; // يبقى الحد الأدنى لكل مركز ناقص
 const take = (list, item) => { list.splice(list.indexOf(item), 1); return item; };
 const give = (i, it) => it.t === 'p' ? S.sq[i].push(it) : (S.co[i] = it);
 const bonus = i => Math.round(S.co[i].r * S.N / 7);
@@ -40,8 +40,11 @@ function teamPitch(i, o) {
     <div class="coach-row">${S.co[i] ? `${av(S.co[i])}<span>المدرب: <b>${esc(S.co[i].name)}</b></span>` : '<span class="mut">المدرب: لم يُشترَ بعد</span>'}</div></div>`;
 }
 const pitches = o => `<section class="pair">${teamPitch(0, o)}${teamPitch(1, o)}</section>`;
-const topbar = () => `<header class="top"><div class="brand"><i data-lucide="gavel"></i><span>مزاد الأساطير</span></div><div class="tools">
-  <span class="chip" id="modeChip">${MODES[mode].n} · <span class="num">${M(MODES[mode].money)}</span></span>
+const cfg = () => edition === 'legends' ? LEGENDS : MODES[mode];
+const chipTxt = () => `${cfg().n} · <span class="num">${M(cfg().money)}</span>`;
+const goHome = () => { if (!lot || S && S.stage >= 5 || confirm('العودة إلى الرئيسية تلغي المزاد الحالي. متأكد؟')) home(); };
+const topbar = () => `<header class="top"><button class="brand" onclick="goHome()" aria-label="الصفحة الرئيسية"><i data-lucide="gavel"></i><span>مزاد الأساطير</span></button><div class="tools">
+  <span class="chip" id="modeChip">${chipTxt()}</span>
   <button class="icon-btn" data-snd onclick="toggleSound()" aria-label="تشغيل الصوت أو إيقافه">${sndBtn()}</button></div></header>`;
 function board(turn) {
   const tm = i => `<div class="sbt${turn === i ? ' on' : ''}" style="--kit:${S.k[i]}"><div class="sbh"><span class="sbn">${T(i)}</span>${turn === i ? '<span class="turn">دوره</span>' : ''}${done(i) ? '<span class="turn ok">مكتمل</span>' : ''}</div>

@@ -21,9 +21,9 @@ function solo() {
   const w = lot.el[0]; lot.mode = 'solo';
   render(topbar() + board(w) + stepper() + `<section class="stage"><div class="stage-card">${fcard(lot.item, {fresh:true})}</div>
     <div class="panel"><div class="turnbar" style="--kit:${S.k[w]}"><b>${T(w)}</b><span>لا منافس له على هذا المركز</span></div>
-      <div class="lbl">السعر الثابت</div><div class="price num">${M(1)}</div>
-      <p class="by">يضمّه ${T(w)} بسعر ${M(1)} فقط.</p>
-      <button class="go" onclick="resolve(${w},1)">تقديم العرض <kbd>↵</kbd></button></div></section>` + pitches() + logCard());
+      <div class="lbl">السعر الثابت</div><div class="price num">${M(S.minp)}</div>
+      <p class="by">يضمّه ${T(w)} بسعر ${M(S.minp)} فقط.</p>
+      <button class="go" onclick="resolve(${w},${S.minp})">تقديم العرض <kbd>↵</kbd></button></div></section>` + pitches() + logCard());
 }
 
 function auction(o) {
@@ -31,22 +31,22 @@ function auction(o) {
   const t = lot.turn, mx = maxBid(t);
   if (lot.bid > 0 && mx <= lot.bid) return resolve(lot.last, lot.bid); // لا يستطيع الرفع: يُحسم المزاد
   lot.mode = 'auction';
-  const btns = [1, 5, 20].map((x, k) => `<button onclick="raise(${lot.bid + x})" ${lot.bid + x > mx ? 'disabled' : ''}><span class="num">${M(x, '+')}</span><kbd>${[1, 5, 2][k]}</kbd></button>`).join('');
+  const btns = S.inc.map((x, k) => `<button onclick="raise(${lot.bid + x})" ${lot.bid + x > mx ? 'disabled' : ''}><span class="num">${M(x, '+')}</span><kbd>${[1, 5, 2][k]}</kbd></button>`).join('');
   render(topbar() + board(t) + stepper() + `<section class="stage"><div class="stage-card">${fcard(lot.item, {fresh:o.fresh})}</div>
     <div class="panel"><div class="turnbar" style="--kit:${S.k[t]}"><b>${T(t)}</b><span>دورك للمزايدة · أقصى عرض متاح ${M(mx)}</span></div>
       <div class="lbl">السعر الحالي</div>
       <div class="price num${o.pulse ? ' pulse' : ''}"><span class="ltr"><span id="pv">${lot.bid}</span><small>M</small></span></div>
-      <div class="by">${lot.last !== null ? `آخر عرض من <b>${T(lot.last)}</b>` : 'افتح المزاد بعرض لا يقل عن 1M'}</div>
+      <div class="by">${lot.last !== null ? `آخر عرض من <b>${T(lot.last)}</b>` : `افتح المزاد بعرض لا يقل عن ${S.minp}M`}</div>
       <div class="bids">${btns}</div>
       <div class="bids2"><button onclick="raise(${mx})" ${mx <= lot.bid ? 'disabled' : ''}>كل الميزانية<kbd>M</kbd></button>
         <button class="alt" onclick="pass()" ${lot.bid === 0 ? 'disabled' : ''}>انسحاب<kbd>P</kbd></button></div>
-      <div class="custom"><input id="cb" type="number" min="${lot.bid + 1}" max="${mx}" placeholder="مبلغ آخر" aria-label="مبلغ آخر"><button class="alt" onclick="raise(+$('cb').value)">زايد</button></div>
+      <div class="custom"><input id="cb" type="number" min="${Math.max(lot.bid + 1, S.minp)}" max="${mx}" placeholder="مبلغ آخر" aria-label="مبلغ آخر"><button class="alt" onclick="raise(+$('cb').value)">زايد</button></div>
       ${lot.err ? `<div class="err">${lot.err}</div>` : ''}</div></section>` + pitches() + logCard(),
     () => { if (o.pulse) fx.count($('pv'), lot.bid, lot.prev, .35); });
 }
 function raise(v) {
   v = Math.floor(v);
-  if (!(v > lot.bid && v <= maxBid(lot.turn))) { lot.err = 'العرض يجب أن يتجاوز السعر الحالي ولا يزيد على أقصى عرض متاح.'; return auction(); }
+  if (!(v > lot.bid && v >= S.minp && v <= maxBid(lot.turn))) { lot.err = `العرض يجب أن يتجاوز السعر الحالي (وألا يقل عن ${S.minp}M) ولا يزيد على أقصى عرض متاح.`; return auction(); }
   sndBid();
   lot.prev = lot.bid; lot.bid = v; lot.last = lot.turn; lot.turn = 1 - lot.turn; lot.err = '';
   auction({pulse:true});
@@ -76,12 +76,12 @@ function resolve(w, price) {
 document.addEventListener('keydown', e => {
   if (!lot || e.ctrlKey || e.metaKey || e.altKey || document.activeElement !== document.body) return;
   if (lot.mode === 'auction') {
-    if (e.key === '1') raise(lot.bid + 1);
-    else if (e.key === '5') raise(lot.bid + 5);
-    else if (e.key === '2') raise(lot.bid + 20);
+    if (e.key === '1') raise(lot.bid + S.inc[0]);
+    else if (e.key === '5') raise(lot.bid + S.inc[1]);
+    else if (e.key === '2') raise(lot.bid + S.inc[2]);
     else if (e.code === 'KeyM') raise(maxBid(lot.turn));
     else if (e.code === 'KeyP' && lot.bid > 0) pass();
   } else if (e.key === 'Enter') {
-    if (lot.mode === 'deal') next(); else if (lot.mode === 'solo') resolve(lot.el[0], 1);
+    if (lot.mode === 'deal') next(); else if (lot.mode === 'solo') resolve(lot.el[0], S.minp);
   }
 });

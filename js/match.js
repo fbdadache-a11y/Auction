@@ -86,7 +86,7 @@ function live() {
         <div class="row c"><button id="again" class="go" style="background:#fff;color:#020F2A;border-color:#fff">مباراة أخرى بنفس التشكيلتين</button><button class="alt" id="newg" style="color:#fff;border-color:#ffffff66">لعبة جديدة</button></div></section>`;
       fx.icons();
       $('again').onclick = () => match(true);
-      $('newg').onclick = setup;
+      $('newg').onclick = home;
       fx.cannons([S.k[w], '#ffffff', '#C9A24B'], 2400);
       try { LEN ? LEN.scrollTo($('fin'), {offset:-120}) : $('fin').scrollIntoView({behavior:reduced ? 'auto' : 'smooth', block:'center'}); } catch (e) {}
     };
