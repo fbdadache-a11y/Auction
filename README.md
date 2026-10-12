@@ -1,38 +1,33 @@
-# مزاد الأساطير
+# ألعاب الكومباطا
 
-لعبة مزاد لتشكيل فريقين وخوض مباراة محاكاة، على جهاز واحد. موقع ثابت بلا خادم
+منصة ألعاب لاعبين اثنين على جهاز واحد. موقع ثابت (GitHub Pages) بلا بناء ولا تسجيل.
 
-## البنية
+## الهيكل
 
 ```
-index.html            الصفحة + ترتيب تحميل الملفات
-css/
-  base.css            المتغيرات والأساسيات
-  components.css      الشريط العلوي، الأزرار، الصور، بطاقة اللاعب
-  scoreboard.css      لوحة النتائج
-  auction.css         منصة المزاد
-  pitch.css           الملعب والمواقع
-  setup.css           شاشة الإعداد
-  match.css           الكشف والمباراة
-  responsive.css      الحركة، الشاشات الصغيرة، Lenis والكرة
-js/
-  data/players.js     1000 لاعب (المركز|الاسم|الإنجليزي|التقييم|الحقبة|الدوري)
-  data/coaches.js     75 مدربًا
-  config.js           الأوضاع، التشكيلات، الدوريات، الحالة العامة
-  fx.js               GSAP، الكونفيتي، الأيقونات، Lenis، كرة Three.js
-  audio.js            الأصوات
-  images.js           صور ويكيبيديا والتخزين المؤقت
-  helpers.js          دوال اللعبة وبطاقة اللاعب والملعب
-  setup.js            شاشة الإعداد والدوريات
-  auction.js          منطق المزاد
-  match.js            المحاكاة والكشف والمباراة المباشرة
-  main.js             نقطة الانطلاق
-tools/bundle.py       يدمج كل شيء في dist/index.html (ملف واحد)
+index.html            المينيو (الصفحة الرئيسية)
+hub/                  كل ما يخص المينيو: css/hub.css  js/sketch.js (الرسم اليدوي)  js/doodles.js (الرسومات)  js/hub.js
+shared/               مشترك بين الألعاب: js/core.js  fx.js  audio.js  slider.js  css/slider.css
+games/registry.js     سجل الألعاب الذي يقرأ منه المينيو
+games/auction/        مزاد الأساطير (css/ js/ js/data/)
+games/anime-fighter/  قتال الأنمي (صفحة «قريباً» حالياً)
+tools/bundle.py       يجمع لعبة في ملف HTML واحد
 ```
 
-## ملاحظات
+## إضافة لعبة جديدة
 
-- الملفات سكربتات عادية (لا modules) تتشارك النطاق العام، فتعمل بالفتح المباشر دون خادم. **ترتيب وسوم `<script>` مهم**.
-- لإضافة لاعب: سطر جديد في `js/data/players.js`. لإضافة مدرب: `js/data/coaches.js`.
-- لتغيير الأموال أو التشكيلات: `MODES` و`FORM_XY` في `js/config.js`.
-- المكتبات الخارجية (GSAP، canvas-confetti، Lenis، Three.js، lucide) اختيارية؛ اللعبة تعمل بدونها.
+1. أنشئ `games/<id>/index.html` وأضف إليه رابط عودة `../../index.html`.
+2. أضف سطراً في `games/registry.js`. حقل `status` يكون `ready` أو `soon`، وحقل `art` اسم رسمة في `hub/js/doodles.js`.
+3. إن احتجت رسمة جديدة للبطاقة أضفها إلى `DOODLES` في `hub/js/doodles.js`.
+
+## قواعد مهمة
+
+- السكربتات عادية وليست وحدات ES، وتتشارك النطاق العام، فترتيبها في `index.html` مهم.
+- الروابط تشير إلى `index.html` صراحة (لا مجلدات) كي تعمل عند الفتح من الملفات مباشرة.
+- المينيو فاتح بورق مربعات: الرسم اليدوي يعمل بمحرك داخلي، ويستعمل rough.js تلقائياً إن وصل من الشبكة.
+
+## ملف واحد لكل لعبة
+
+```
+python3 tools/bundle.py auction     # ينتج dist/auction.html
+```
