@@ -29,7 +29,7 @@ function match(skipReveal) {
 }
 
 function reveal() {
-  const R = S.res;
+  const R = S.res; S.phase = 'reveal'; save();
   const tot = i => `<div class="tot" style="--kit:${S.k[i]}"><div class="tr"><span>مجموع اللاعبين</span><b class="num" data-t="sum${i}">؟؟</b></div>
     <div class="tr"><span>أثر المدرب</span><b class="num" data-t="bn${i}">؟؟</b></div><div class="tr big"><span>القوة الكلية</span><b class="num" data-t="tt${i}">؟؟</b></div></div>`;
   render(topbar() + `<h2 class="ttl">كشف التقييمات</h2>` + pitches({reveal:true}) + `<section class="pair tots">${tot(0)}${tot(1)}</section>
@@ -56,12 +56,12 @@ function reveal() {
     let k = 0;
     TM = setInterval(() => { if (k >= q.length) fin(); else flip(q[k++]); }, 230);
     $('skipRev').onclick = fin;
-    $('startM').onclick = live;
+    $('startM').onclick = () => live();
   });
 }
 
-function live() {
-  const R = S.res; stopTimers();
+function live(skip) {
+  const R = S.res; stopTimers(); S.phase = 'live'; save();
   const sbt = i => `<div class="sbt" style="--kit:${S.k[i]}"><div class="sbh"><span class="sbn">${T(i)}</span></div><div class="sbm num" id="g${i}">0</div></div>`;
   render(topbar() + `<section class="sb live">${sbt(0)}<div class="sbc"><div class="clock num" id="clk"><span class="ltr">0'</span></div><div class="ln" id="half">الشوط الأول</div><div class="prog"><i id="cp"></i></div></div>${sbt(1)}</section>
     <ul class="feed" id="feed"></ul><div class="row c" id="lc"><button class="alt" id="skipM">تخطّ إلى النهاية</button></div><div id="fin"></div>`, () => {
@@ -75,7 +75,7 @@ function live() {
       if (!quiet) { sndGoal(); el.classList.remove('pulse'); void el.offsetWidth; el.classList.add('pulse'); fx.boom({particleCount:50, spread:70, startVelocity:35, origin:fx.at(el), colors:[S.k[e.t], '#ffffff']}); }
     };
     const end = () => {
-      stopTimers(); sndWhistle();
+      stopTimers(); sndWhistle(); S.phase = 'final'; save();
       $('clk').innerHTML = `<span class="ltr">90'</span>`; $('cp').style.width = '100%'; $('half').textContent = 'انتهت المباراة';
       $('lc').remove();
       const w = R.w;
@@ -101,7 +101,7 @@ function live() {
     };
     sndWhistle();
     add('صافرة البداية', 'mark');
-    TM = setTimeout(step, 600);
     $('skipM').onclick = () => { stopTimers(); while (ev < R.events.length) goal(R.events[ev++], true); end(); };
+    if (skip) $('skipM').onclick(); else TM = setTimeout(step, 600);
   });
 }

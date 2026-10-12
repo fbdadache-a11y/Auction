@@ -9,7 +9,7 @@ function filterStars(pos) {
   tr.scrollLeft = 0; hydrate(); initSliders();
 }
 function home() {
-  stopTimers(); lot = null; showPos = 'ALL';
+  stopTimers(); lot = null; showPos = 'ALL'; clearSave();
   STARS = [...LEG_P].sort(() => Math.random() - .5);
   const vp = (k, ttl, big, lines, cta, tag) => `<article class="vp ${k}">${tag ? `<span class="vtag">${tag}</span>` : ''}
     <h3>${ttl}</h3><div class="vbig num">${big}</div>
