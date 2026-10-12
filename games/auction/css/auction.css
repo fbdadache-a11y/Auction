@@ -19,3 +19,9 @@
 .bids2 button.alt{background:var(--red);color:#fff}
 .bids2 button.alt:hover:not(:disabled){background:#ff5a53}
 .custom{display:flex;gap:8px;margin-top:14px;align-items:center}
+/* تراجع وإعادة تعيين المزايدة */
+.bids3{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.bids3 button{min-height:40px;font-size:.9rem;padding:6px 10px;background:transparent;color:var(--ink);border:1.5px solid currentColor;clip-path:none;opacity:.85}
+.bids3 button:hover:not(:disabled){background:var(--raise);opacity:1}
+.undo-deal{margin-top:10px;background:transparent;color:var(--ink);border:1.5px solid currentColor;clip-path:none;min-height:42px}
+.undo-deal:hover{background:var(--raise)}
