@@ -1,0 +1,17 @@
+/* ===== القوائم المنزلقة (مشتركة) ===== */
+/* المتغيرات المطلوبة من الصفحة المضيفة: --raise  --ink  --sig  --sig-ink */
+.slider{position:relative;display:flex;align-items:center;gap:8px}
+.track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:12px 4px 16px;flex:1;min-width:0;cursor:grab;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.track::-webkit-scrollbar{display:none}
+.track:focus-visible{outline:2px solid var(--sig);outline-offset:2px}
+.track.drag{scroll-snap-type:none;cursor:grabbing;user-select:none}
+.sl-i{flex:none;scroll-snap-align:start}
+.sl-btn{flex:none;width:38px;height:38px;padding:0;clip-path:none;display:inline-flex;align-items:center;justify-content:center;background:var(--raise);color:var(--ink)}
+.sl-btn:hover:not(:disabled){background:var(--sig);color:var(--sig-ink)}
+.sl-btn:disabled{opacity:.25}
+.sl-btn i:empty::before{content:'‹';font-size:1.5rem;line-height:1}
+.sl-btn[data-d="-1"] i:empty::before{content:'›'}
+.slider.no-nav .sl-btn{display:none}
+.slider.fit .sl-i{flex:1 0 200px}
+.slider.lgs .track{gap:8px}
+.card .slider .track{padding-block:6px 10px}
