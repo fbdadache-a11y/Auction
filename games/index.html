@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#F4F3EF">
+<title>قتال الأنمي — قريباً</title>
+<link href="https://fonts.googleapis.com/css2?family=Playpen+Sans+Arabic:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../hub/css/hub.css">
+<style>
+.soon-page{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:56px 0 40px}
+.soon-page .art{max-width:340px}
+.soon-page h1{font-size:clamp(2rem,6vw,3.2rem)}
+.soon-page p{color:var(--pencil);max-width:34ch}
+.soon-page .btn{align-self:center;margin-top:10px}
+</style>
+</head>
+<body>
+<main id="app">
+  <section class="soon-page">
+    <svg class="art" viewBox="0 0 240 150" data-art="fighters" aria-hidden="true"></svg>
+    <h1>قتال الأنمي</h1>
+    <p>هذه هي اللعبة القادمة على المنصة. مواجهة بين مقاتلين على جهاز واحد. لم تجهز بعد.</p>
+    <a class="btn" data-sk="btn" href="../../index.html">العودة إلى ألعاب الكومباطا</a>
+  </section>
+</main>
+<script src="../../shared/js/core.js"></script>
+<script src="../../hub/js/sketch.js"></script>
+<script src="../../hub/js/doodles.js"></script>
+<script>
+document.querySelectorAll('svg[data-art]').forEach(drawArt);
+const b = document.querySelector('[data-sk]');
+function fr() {
+  let s = b.querySelector(':scope > svg.frame');
+  if (!s) { s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'frame'); s.setAttribute('aria-hidden', 'true'); b.prepend(s); }
+  const w = b.offsetWidth, h = b.offsetHeight; s.setAttribute('viewBox', `0 0 ${w} ${h}`); s.innerHTML = '';
+  SK.seed(9 + w); SK.rect(s, 3, 3, w - 6, h - 6, {width:2.4, rough:1}); SK.finish(s);
+}
+fr(); if (window.ResizeObserver) new ResizeObserver(fr).observe(b);
+</script>
+</body>
+</html>
