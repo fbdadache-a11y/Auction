@@ -1,0 +1,21 @@
+/* ===== منصة المزاد ===== */
+.stage{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;margin:18px 0 24px}
+.stage-card{position:relative}
+.panel,.card,.tot{background:var(--surface);clip-path:var(--cut)}
+.panel{padding:20px 22px}
+.turnbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-inline-start:6px solid var(--kit);background:var(--raise);padding:8px 14px;margin-bottom:14px}
+.turnbar b{font-family:var(--f-head);font-weight:800}
+.lbl{font-size:.8rem;color:var(--mut);line-height:1.3}
+.price{color:var(--sig);font-size:7rem;margin:2px 0 6px}
+.pulse{animation:pulse .35s ease-out}
+.by{font-size:.9rem;color:var(--mut);margin-bottom:14px;min-height:1.5em}
+.by b{color:var(--ink)}
+.bids{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bids button{font-size:2rem;padding:10px 0 6px;line-height:1;display:flex;align-items:baseline;justify-content:center;gap:4px;background:var(--raise);color:var(--ink)}
+.bids button:hover:not(:disabled){background:var(--sig);color:var(--sig-ink)}
+.bids2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.bids2 button:first-child{background:#fff;color:#15130A}
+.bids2 button:first-child:hover:not(:disabled){background:var(--sig)}
+.bids2 button.alt{background:var(--red);color:#fff}
+.bids2 button.alt:hover:not(:disabled){background:#ff5a53}
+.custom{display:flex;gap:8px;margin-top:14px;align-items:center}
