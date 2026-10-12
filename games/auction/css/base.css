@@ -1,0 +1,28 @@
+/* لغة التصميم: رسوميات بث المباراة. أسطح داكنة مسطّحة، قصّات مائلة، ولون واحد هو أصفر بطاقة الحكم. */
+:root{
+  --bg:#121416;--surface:#1A1D20;--raise:#262B30;--line:#333A41;
+  --ink:#F3F4F5;--mut:#9AA3AD;
+  --sig:#FFD21F;--sig-ink:#15130A;--red:#E5322D;
+  --pitch1:#1B5A38;--pitch2:#206642;--kit:#FFD21F;
+  --f-head:"Noto Kufi Arabic","Readex Pro",system-ui,sans-serif;
+  --f-body:"Readex Pro",system-ui,sans-serif;
+  --f-num:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --sl:10px;
+  --slant:polygon(var(--sl) 0,100% 0,calc(100% - var(--sl)) 100%,0 100%);
+  --cut:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-weight:500;line-height:1.6}
+#app{max-width:1000px;margin:0 auto;padding:0 16px 72px;overflow-x:clip}
+h1,h2,h3,h4,p{margin:0}
+h1,h2,h3,h4{font-family:var(--f-head);line-height:1.25}
+.num{font-family:var(--f-num);font-style:italic;font-weight:800;line-height:.95;letter-spacing:.01em}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
+.ltr small{font-size:.55em;margin-inline-start:2px;font-weight:700}
+.pr{display:inline-flex;gap:.3em;align-items:baseline}
+.mut{color:var(--mut)}
+small{font-size:.85rem}
+kbd{font-family:var(--f-num);font-style:normal;font-size:.75rem;opacity:.7;background:#00000030;padding:0 6px;margin-inline-start:8px;font-weight:700}
+@media (hover:none){kbd{display:none}}
+svg.lucide{width:1.1em;height:1.1em;stroke-width:2.2;vertical-align:-.15em}

@@ -1,0 +1,20 @@
+/* ===== الكشف والمباراة ===== */
+.tots{margin-top:0}
+.tot{padding:12px 16px;border-top:6px solid var(--kit)}
+.tr{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;font-size:.9rem}
+.tr .num{font-size:1.5rem}
+.tr.big{border-top:1px solid var(--line);margin-top:4px;padding-top:6px;font-weight:800}
+.tr.big .num{font-size:2.6rem;color:var(--sig)}
+.sb.live .sbm{font-size:5.4rem;text-align:center;margin-top:0}
+.sb.live .sbh{justify-content:center}
+.clock{font-size:3.2rem;color:var(--sig)}
+.feed{list-style:none;margin:16px 0;padding:0}
+.ev{display:flex;gap:12px;align-items:center;background:var(--surface);border-inline-start:6px solid var(--kit);padding:7px 14px;margin-bottom:6px;animation:rise .3s both}
+.ev .num{font-size:1.5rem;min-width:46px;direction:ltr}
+.ev.mark{border-inline-start-color:var(--line);color:var(--mut);font-size:.9rem}
+.final{text-align:center;padding:28px 16px 24px;background:var(--surface);border-top:8px solid var(--kit);margin-top:18px;animation:rise .5s both;clip-path:var(--cut)}
+.final svg.lucide{width:44px;height:44px;color:var(--sig)}
+.final .whistle{font-weight:600;color:var(--mut)}
+.final .fw{font-family:var(--f-head);font-size:1.8rem;font-weight:900;margin:4px 0;color:var(--sig)}
+.final .fs{font-size:6rem;margin:6px 0}
+.final .sub{color:var(--mut);font-size:.95rem}

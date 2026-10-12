@@ -1,0 +1,22 @@
+/* ===== لوحة النتائج على طريقة شريط البث ===== */
+.sb{display:grid;grid-template-columns:1fr minmax(120px,auto) 1fr;background:var(--surface);color:var(--ink)}
+@media (min-width:720px){.sb{position:sticky;top:8px;z-index:20}}
+.sbt{padding:10px 18px 12px;border-top:6px solid var(--kit);min-width:0}
+.sbt.on{background:var(--raise)}
+.sbh{display:flex;align-items:center;gap:8px;min-height:26px}
+.sbn{font-family:var(--f-head);font-weight:800;font-size:1.05rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sbm{font-size:3.2rem;margin-top:2px}
+.sbs{font-size:.8rem;color:var(--mut)}
+.sbs .ltr small{font-size:.8em}
+.turn{background:var(--sig);color:var(--sig-ink);font-family:var(--f-head);font-size:.7rem;font-weight:800;padding:0 12px;clip-path:var(--slant);white-space:nowrap}
+.turn.ok{background:#fff}
+.sbc{padding:8px 14px;text-align:center;background:#0E0F11;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.sbc .st{font-family:var(--f-head);font-weight:800;font-size:1rem}
+.sbc .ln{font-size:.78rem;color:var(--mut)}
+.sbc .ln .num{color:var(--ink);font-size:1.05rem}
+.prog{height:4px;background:var(--raise);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--sig);width:0;transition:width .3s}
+.steps{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;font-family:var(--f-head);font-size:.85rem;color:var(--mut);margin:14px 0 4px}
+.steps span{padding:8px 16px;border-bottom:3px solid var(--raise)}
+.steps .on{color:var(--ink);font-weight:800;border-bottom-color:var(--sig)}
+.steps .done{opacity:.5;text-decoration:line-through}
