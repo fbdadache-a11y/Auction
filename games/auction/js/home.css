@@ -1,0 +1,45 @@
+/* ===== الصفحة الرئيسية ===== */
+.home-top{display:flex;justify-content:space-between;align-items:center;height:60px;border-bottom:2px solid var(--raise)}
+.hub-link{font-family:var(--f-head);font-weight:800;font-size:.85rem;color:var(--ink);background:var(--raise);padding:6px 22px;clip-path:var(--slant);text-decoration:none;display:inline-flex;align-items:center}
+.hub-link:hover,.hub-link:focus-visible{background:#fff;color:#15130A;outline:none}
+@media (pointer:coarse){.hub-link{min-height:40px}}
+.home-t{display:flex;align-items:center;gap:20px;padding:30px 0 22px}
+.home-t h1{font-size:clamp(1.9rem,4.6vw,3rem);font-weight:900;max-width:18ch}
+.home-t p{color:var(--mut);margin-top:8px;max-width:42ch}
+
+/* شاشة المواجهة: لوحتان مائلتان تفصل بينهما شرطة مائلة */
+.vs{display:flex;gap:10px;margin:0 0 8px;overflow:clip}
+.vp{--vs:44px;position:relative;flex:1;min-height:360px;padding:34px 56px 34px;display:flex;flex-direction:column;clip-path:polygon(var(--vs) 0,100% 0,calc(100% - var(--vs)) 100%,0 100%)}
+.vp.legends{background:var(--sig);color:var(--sig-ink);--rule:rgba(21,19,10,.28);animation:vsR .55s cubic-bezier(.2,.9,.3,1) both}
+.vp.classic{background:var(--surface);color:var(--ink);--rule:var(--line);animation:vsL .55s cubic-bezier(.2,.9,.3,1) both}
+@keyframes vsR{from{opacity:0;transform:translateX(56px)}}
+@keyframes vsL{from{opacity:0;transform:translateX(-56px)}}
+.vp h3{font-size:1.7rem;font-weight:900}
+.vbig{font-size:5.2rem;margin:6px 0 10px;white-space:nowrap}
+.vtag{align-self:flex-start;background:var(--sig-ink);color:var(--sig);font-family:var(--f-head);font-weight:800;font-size:.75rem;padding:1px 14px;clip-path:var(--slant);margin-bottom:8px}
+.spec{list-style:none;margin:0 0 20px;padding:0}
+.spec li{padding:9px 0;border-top:1px solid var(--rule)}
+.vp .go{margin-top:auto;align-self:flex-start}
+.vp.legends .go{background:var(--sig-ink);color:#fff}
+.vp.legends .go:hover:not(:disabled),.vp.legends .go:focus-visible{background:#fff;color:var(--sig-ink)}
+
+.hsec{margin:40px 0 8px}
+.hsec h2{font-size:1.4rem;font-weight:900}
+.hsec .sub{color:var(--mut);font-size:.9rem;margin:2px 0 12px}
+.fl{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}
+.fl button[aria-pressed=true]{background:var(--sig);color:var(--sig-ink)}
+.slider.how-sl .sl-i{width:min(250px,76vw)}
+.stc{height:100%;padding:18px;background:var(--surface);clip-path:var(--cut)}
+.stc .n{font-size:3.2rem;color:var(--sig);margin-bottom:6px}
+.stc h4{font-size:1.05rem;font-weight:800;margin-bottom:4px}
+.stc p{color:var(--mut);font-size:.9rem}
+.home-foot{margin-top:30px;padding-bottom:12px;color:var(--mut);font-size:.85rem}
+@media (max-width:720px){
+  .home-t{padding:20px 0 16px;gap:14px}
+  .vs{flex-direction:column}
+  .vp{--vs:22px;min-height:0;padding:26px 40px}
+  .vbig{font-size:3.3rem}
+  .sl-btn{width:32px;height:32px}
+  .slider{gap:4px}
+}
+@media (max-width:480px){.home-top .icon-btn span{display:none}.home-top .icon-btn{padding:5px 12px}.hub-link{padding:6px 14px}.home-top .tools{gap:6px}}

@@ -1,0 +1,90 @@
+/* ===== الكشف والمباراة ===== */
+.tots{margin-top:0}
+.tot{padding:12px 16px;border-top:6px solid var(--kit)}
+.tr{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;font-size:.9rem}
+.tr .num{font-size:1.5rem}
+.tr.big{border-top:1px solid var(--line);margin-top:4px;padding-top:6px;font-weight:800}
+.tr.big .num{font-size:2.6rem;color:var(--sig)}
+.sb.live .sbm{font-size:5.4rem;text-align:center;margin-top:0}
+.sb.live .sbh{justify-content:center}
+.clock{font-size:3.2rem;color:var(--sig)}
+.feed{list-style:none;margin:16px 0;padding:0}
+.ev{display:flex;gap:12px;align-items:center;background:var(--surface);border-inline-start:6px solid var(--kit);padding:7px 14px;margin-bottom:6px;animation:rise .3s both}
+.ev .num{font-size:1.5rem;min-width:46px;direction:ltr}
+.ev.mark{border-inline-start-color:var(--line);color:var(--mut);font-size:.9rem}
+.final{text-align:center;padding:28px 16px 24px;background:var(--surface);border-top:8px solid var(--kit);margin-top:18px;animation:rise .5s both;clip-path:var(--cut)}
+.final svg.lucide{width:44px;height:44px;color:var(--sig)}
+.final .whistle{font-weight:600;color:var(--mut)}
+.final .fw{font-family:var(--f-head);font-size:1.8rem;font-weight:900;margin:4px 0;color:var(--sig)}
+.final .fs{font-size:6rem;margin:6px 0}
+.final .sub{color:var(--mut);font-size:.95rem}
+
+/* ===== المباراة التفاعلية: ملعب مصغّر، اختيار سري، ركلات ترجيح، ملخص ===== */
+.stn{font-size:.78rem;color:var(--sig);font-weight:700;text-align:center;margin-top:2px;min-height:1.2em}
+.sb.live .sbn{text-align:center}
+.mp{position:relative;direction:ltr;margin:12px 0;aspect-ratio:21/6.5;max-height:230px;background:repeating-linear-gradient(90deg,var(--pitch1) 0 12.5%,var(--pitch2) 12.5% 25%);border:2px solid rgba(255,255,255,.45);overflow:hidden}
+.mp::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(255,255,255,.45)}
+.mp .mc{position:absolute;left:50%;top:50%;width:17%;aspect-ratio:1;border:2px solid rgba(255,255,255,.45);border-radius:50%;transform:translate(-50%,-50%)}
+.mp .pa{position:absolute;top:20%;height:60%;width:15%;border:2px solid rgba(255,255,255,.45)}
+.mp .pa.l{left:0;border-left:0}.mp .pa.r{right:0;border-right:0}
+.mp .gl{position:absolute;top:38%;height:24%;width:2.4%;background:var(--c)}
+.mp .gl.l{left:0}.mp .gl.r{right:0}
+.mp .bl{position:absolute;left:50%;top:50%;width:clamp(12px,2.2vw,18px);aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:0 0 0 2px #0007;transform:translate(-50%,-50%);transition:left .5s cubic-bezier(.25,.8,.35,1),top .5s ease}
+.mp .mt{position:absolute;inset-inline:0;top:6px;text-align:center;font-family:var(--f-head);font-weight:800;font-size:.85rem;color:#fff;text-shadow:0 1px 3px #000}
+.mp.g{animation:gflash .9s}
+@keyframes gflash{0%,60%{box-shadow:inset 0 0 0 5px var(--sig)}100%{box-shadow:none}}
+
+.duel{background:var(--surface);margin:14px 0;padding:16px;border-top:4px solid var(--sig);animation:rise .3s both}
+.dh h3{font-size:1.25rem}.dh p{color:var(--mut);margin-top:2px}
+.dsides{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.dside{background:var(--raise);border-top:5px solid var(--kit);padding:10px;min-width:0;display:flex;flex-direction:column}
+.dsh{display:flex;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:8px;font-size:.85rem}
+.dsh b{font-family:var(--f-head);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dsh span{color:var(--sig);font-weight:700;flex:none}
+.dopts{display:grid;gap:8px}
+.dopt{display:flex;flex-direction:column;align-items:flex-start;text-align:start;gap:1px;min-height:56px;padding:8px 12px;background:var(--surface);color:var(--ink);clip-path:none;border-inline-start:4px solid var(--sig)}
+.dopt:hover:not(:disabled){background:var(--sig);color:var(--sig-ink)}
+.dopt b{font-size:.98rem}
+.dopt small{font-weight:500;font-size:.72rem;opacity:.75;line-height:1.35}
+.dopts.z{grid-template-columns:repeat(3,1fr);direction:ltr}
+.dopts.z .dopt{align-items:center;text-align:center;min-height:64px;justify-content:center;border-inline-start:0;border-bottom:4px solid var(--sig)}
+.dlock,.dpick{flex:1;display:flex;align-items:center;justify-content:center;min-height:90px;font-family:var(--f-head);font-weight:800;text-align:center;padding:8px}
+.dlock{color:var(--mut);animation:rise .25s both}
+.dpick{font-size:1.15rem;color:var(--sig);animation:popin .35s both}
+.dnote{color:var(--mut);font-size:.82rem;margin-top:10px;text-align:center}
+.dverdict{margin-top:12px;text-align:center;font-family:var(--f-head);font-weight:800;font-size:1.05rem;animation:rise .3s both}
+.dverdict small{font-family:var(--f-body);font-weight:600;color:var(--sig);font-size:.85rem}
+.rps{list-style:none;padding:0;margin:0 0 4px;display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--mut);font-size:.9rem}
+.rps li::before{content:"▸ ";color:var(--sig)}
+
+.ev.dim{opacity:.8;font-size:.9rem;padding:4px 14px}
+.ev.dim .num{font-size:1.15rem}
+.keytag{font-size:.7rem;background:var(--raise);color:var(--sig);padding:1px 8px;margin-inline-start:6px;white-space:nowrap}
+.feed.sum .ev .num{min-width:42px}
+
+.somsg{text-align:center;font-family:var(--f-head);font-weight:800;min-height:1.7em;margin:6px 0}
+.sot{background:var(--surface);border-top:5px solid var(--kit);padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.sot b{font-family:var(--f-head);flex:1 1 100%}
+.sot .num{font-size:2.6rem;margin-inline-start:auto;color:var(--sig)}
+.dots{display:flex;gap:7px;flex-wrap:wrap}
+.dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);display:inline-block}
+.dot.g{background:#3CC46B;border-color:#3CC46B}.dot.x{background:var(--red);border-color:var(--red)}
+
+.mvp{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;margin:18px 0;padding:18px;background:var(--surface);border-top:6px solid var(--kit)}
+.mvt h3{font-size:1.6rem}.mvt p{margin-top:4px}
+.mvt .num{font-size:1.6rem;color:var(--sig)}
+.mvp .fc{--w:170px}
+.mvp .fc-r{font-size:2.4em}
+.stats{margin-top:0}
+.stats h3{margin-bottom:6px}
+.sr{margin-top:12px}
+.sl{font-size:.82rem;color:var(--mut)}
+.sv{display:flex;align-items:center;gap:12px}
+.sv .num{font-size:1.6rem;min-width:52px;text-align:center}
+.sbar{flex:1;display:flex;gap:3px;height:10px}
+.sbar i{display:block;height:100%}
+@media (max-width:560px){
+  .dsides{gap:8px}.dside{padding:8px}.dopt{padding:6px 9px}.dopt b{font-size:.9rem}.dopt small{font-size:.68rem}
+  .mp{aspect-ratio:16/6.5}
+  .duel{padding:12px}
+}
