@@ -1,0 +1,47 @@
+/* ===== الشاشات الصغيرة ===== */
+@media (max-width:720px){
+  #app{padding-inline:12px}
+  .top .chip{display:none}
+  .sbh{flex-wrap:wrap;gap:2px 8px}.sbn{white-space:normal;line-height:1.25}
+  .stage{grid-template-columns:1fr;justify-items:center;gap:20px}
+  .stage>.panel,.stage>div:last-child{width:100%}
+  .price{font-size:5rem}
+  .pair{grid-template-columns:1fr;max-width:440px;margin-inline:auto}
+  .sbt{padding:6px 8px 8px}.sbm{font-size:2.3rem}.sbn{font-size:.9rem}
+  .sbc{padding:6px 6px}.sbc .st{font-size:1.1rem}
+  .teams2,.how,.vs,.rosters{grid-template-columns:1fr}
+  .facts{grid-template-columns:1fr 1fr}.facts b{font-size:2rem}
+  .cover{grid-template-columns:1fr;padding:22px 18px;gap:0}
+  .cover-c{height:250px}
+  .cover-c .cc{--w:140px}
+  .cover-c .cc:nth-child(1){transform:translate(-50%,-50%) translateX(-64px) rotate(-9deg)}
+  .cover-c .cc:nth-child(2){transform:translate(-50%,-50%) translateX(64px) rotate(8deg)}
+  .vp{min-height:0}.vbig{font-size:3.6rem}
+  .dsides{gap:8px}.dside{padding:8px}
+  .dopts{grid-template-columns:1fr}
+  .clash-g{grid-template-columns:1fr 1fr;gap:10px}
+  .cl-vs{grid-column:1/-1;order:-1;width:84px;height:84px;margin-bottom:-8px}.cl-vs .sfx{font-size:2.2rem}
+  .cl-side .cc{--w:140px}
+  .mvp{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .sl-btn{width:34px;height:34px}.slider{gap:4px}
+}
+@media (max-width:480px){.home-top .icon-btn span,.top .icon-btn span{display:none}.home-top .icon-btn,.top .icon-btn{padding:4px 12px}.hub-link{padding:4px 12px}.home-top .tools{gap:6px}
+  .brand{font-size:1.4rem}.cover h1{font-size:3.6rem}}
+/* ===== اللمس: أهداف ضغط لا تقل عن 40px ===== */
+@media (pointer:coarse){
+  button{min-height:44px}
+  button.sm,.icon-btn,.fl button{min-height:40px}
+  .sl-btn{width:40px;height:40px;min-height:0}
+  .swb{width:38px;min-height:36px;height:36px}
+  button.brand{min-height:40px}
+}
+/* خيارات الاختيار السري تتقلّص بلا تجاوز للعرض */
+.dopts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.dopts.one{grid-template-columns:minmax(0,1fr)}
+.dopt{min-width:0}.dopt .dt{flex:1}
+@media (max-width:720px){
+  .dopts,.dopts.one{grid-template-columns:minmax(0,1fr)}
+  .dopt{padding:3px 6px;gap:6px;min-height:46px}.dopt .av{width:30px;height:36px}.dopt .rr{font-size:1.1rem}.dopt b{font-size:.8rem}.dopt small{font-size:.66rem}
+  .dsh{flex-direction:column;gap:0}.dsh span{font-size:.75rem}
+  .cover-c{margin-top:34px;height:270px}
+}

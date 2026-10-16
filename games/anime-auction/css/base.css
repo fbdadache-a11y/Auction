@@ -1,0 +1,66 @@
+/* لغة التصميم: صفحة مانجا. ورق كريمي وحبر أسود وتظليل نقطي (سكرين تون) وإطارات سميكة بظلّ صلب.
+   لون واحد للتأكيد هو أحمر المؤثرات الصوتية، ولكل نوع مقاتل نقشه الخاص بالأبيض والأسود. */
+:root{
+  --paper:#F2EEE3;--paper2:#E7E1D1;--card:#FBF9F3;--ink:#16130E;--ink2:#3B362C;--mut:#6B655A;--line:#CFC8B5;
+  --red:#D4302A;--B:#D4302A;--A:#3F4FB8;--V:#E39A12;--kit:#16130E;
+  --f-disp:"Lalezar","Rakkas","Noto Kufi Arabic",system-ui,sans-serif;
+  --f-head:"Noto Kufi Arabic","Readex Pro",system-ui,sans-serif;
+  --f-body:"Readex Pro",system-ui,sans-serif;
+  --bd:3px;--sh:5px;--raise:#FBF9F3;--sig:#D4302A;--sig-ink:#fff;
+  --dots:radial-gradient(circle,var(--ink) 1.1px,transparent 1.6px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--paper)}
+body{margin:0;color:var(--ink);font-family:var(--f-body);font-weight:500;line-height:1.6;min-height:100vh;
+  background:var(--paper) radial-gradient(circle at 100% 0,rgba(22,19,14,.14) 0 1px,transparent 1.5px) 0 0/8px 8px}
+body::before{content:"";position:fixed;inset:0 auto auto 0;width:min(46vw,420px);height:min(46vw,420px);pointer-events:none;z-index:-1;
+  background:var(--dots) 0 0/9px 9px;opacity:.16;-webkit-mask-image:radial-gradient(circle at 0 0,#000,transparent 70%);mask-image:radial-gradient(circle at 0 0,#000,transparent 70%)}
+#app{max-width:1020px;margin:0 auto;padding:0 16px 72px;overflow-x:clip}
+h1,h2,h3,h4,p{margin:0}
+h1,h2,h3,h4{font-family:var(--f-head);line-height:1.25}
+.num{font-family:var(--f-disp);font-weight:400;line-height:.95;letter-spacing:.01em}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
+.ltr small{font-size:.55em;margin-inline-start:2px;font-weight:700}
+.pr{display:inline-flex;gap:.3em;align-items:baseline}
+.mut{color:var(--mut)}
+small{font-size:.85rem}
+kbd{font-family:var(--f-body);font-size:.7rem;opacity:.7;border:1.5px solid currentColor;padding:0 5px;margin-inline-start:8px;font-weight:700;line-height:1.3}
+@media (hover:none){kbd{display:none}}
+svg.lucide{width:1.1em;height:1.1em;stroke-width:2.4;vertical-align:-.15em}
+/* ===== الأزرار: حبر أسود وظلّ صلب يغوص عند الضغط ===== */
+button{font-family:var(--f-head);font-weight:800;font-size:.95rem;cursor:pointer;padding:9px 24px;border:var(--bd) solid var(--ink);background:var(--ink);color:var(--paper);
+  box-shadow:3px 3px 0 var(--red);transition:transform .08s,box-shadow .08s,background .12s,color .12s;position:relative}
+button:hover:not(:disabled){background:var(--red);border-color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+button:active:not(:disabled){transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+button:focus-visible{outline:3px dashed var(--red);outline-offset:3px}
+button.alt,.icon-btn{background:var(--card);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+button.alt:hover:not(:disabled),.icon-btn:hover:not(:disabled){background:var(--paper2);box-shadow:3px 3px 0 var(--red);color:var(--ink)}
+button.sm,.icon-btn{padding:4px 16px;font-size:.85rem}
+.icon-btn{display:inline-flex;align-items:center;gap:6px}
+button.go{font-family:var(--f-disp);font-weight:400;font-size:1.5rem;padding:6px 40px 4px;letter-spacing:.02em;box-shadow:5px 5px 0 var(--red)}
+button.go:hover:not(:disabled){box-shadow:5px 5px 0 var(--ink)}
+button:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+input{font:inherit;font-weight:700;width:100%;padding:8px 12px;border:var(--bd) solid var(--ink);background:var(--card);color:var(--ink);border-radius:0}
+input:focus-visible{outline:3px dashed var(--red);outline-offset:2px}
+input::placeholder{color:var(--mut);font-weight:500}
+input[type=number]{width:140px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.row.c{justify-content:center}
+.err{font-weight:800;margin-top:8px;color:var(--red)}
+.warn{font-weight:800;color:var(--red)}
+
+/* ===== الشريط العلوي ===== */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;height:62px;border-bottom:var(--bd) solid var(--ink);margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--f-disp);font-weight:400;font-size:1.7rem;white-space:nowrap;line-height:1}
+button.brand{background:none;border:0;box-shadow:none;padding:0;color:var(--ink)}
+button.brand:hover:not(:disabled){background:none;color:var(--red);box-shadow:none}
+.logo-mk{background:var(--ink);color:var(--paper);padding:3px 12px 0;transform:rotate(-3deg);display:inline-block}
+.tools{display:flex;align-items:center;gap:10px}
+.chip{display:inline-block;background:var(--card);border:2px solid var(--ink);padding:1px 14px;font-size:.85rem;font-weight:700}
+.chip .num{font-size:1.2rem}
+
+/* ===== الصور: إن لم تصل الصورة يظهر حرف الاسم على نقش مانجا ===== */
+.av{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;flex:none;background:var(--paper2);overflow:hidden;font-family:var(--f-disp);font-size:.95rem;color:var(--ink);position:relative}
+.av::before{content:"";position:absolute;inset:0;background:var(--dots) 0 0/5px 5px;opacity:.28}
+.av>span{position:relative}
+.av img{width:100%;height:100%;object-fit:cover;object-position:center 18%;display:block;position:relative}
