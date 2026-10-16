@@ -29,6 +29,22 @@ const DOODLES = {
     SK.rect(s, 138, 126, 84, 14, {fill:'#FBFBF8', width:2.4});
     SK.line(s, 116, 36, 108, 26, {width:2.2}); SK.line(s, 124, 42, 124, 30, {width:2.2}); SK.line(s, 110, 46, 100, 42, {width:2.2});
   },
+  // مزاد الأنمي: بطاقة بطل بشعر مدبّب ومطرقة وخطوط سرعة
+  animeauction(s) {
+    const R = (pts, cx, cy, a) => SK.rot(pts, cx, cy, a), cx = 78, cy = 78;
+    SK.poly(s, R([[cx - 40, cy - 56], [cx + 40, cy - 56], [cx + 40, cy + 56], [cx - 40, cy + 56]], cx, cy, -9), {fill:'#FBFBF8', width:2.6});
+    SK.poly(s, R([[cx - 32, cy - 48], [cx + 32, cy - 48], [cx + 32, cy + 8], [cx - 32, cy + 8]], cx, cy, -9), {fill:HL, width:2});
+    const hx = cx, hy = cy - 16;
+    SK.ellipse(s, hx, hy, 30, 32, {fill:'#FBFBF8', width:2.4});
+    SK.open(s, R([[hx - 15, hy - 12], [hx - 19, hy - 30], [hx - 8, hy - 21], [hx - 3, hy - 38], [hx + 4, hy - 22], [hx + 14, hy - 34], [hx + 15, hy - 12]], cx, cy, -9), {width:2.6});
+    SK.line(s, hx - 7, hy, hx - 3, hy - 3, {width:2}); SK.line(s, hx + 6, hy - 3, hx + 10, hy, {width:2});
+    SK.line(s, cx - 24, cy + 28, cx + 22, cy + 22, {width:2.2}); SK.line(s, cx - 20, cy + 40, cx + 14, cy + 35, {width:1.8});
+    const gx = 176, gy = 62, G = pts => SK.rot(pts, gx, gy, 35);
+    SK.poly(s, G([[gx - 5, gy + 13], [gx + 5, gy + 13], [gx + 5, gy + 82], [gx - 5, gy + 82]]), {fill:'#FBFBF8', width:2.2});
+    SK.poly(s, G([[gx - 34, gy - 14], [gx + 34, gy - 14], [gx + 34, gy + 14], [gx - 34, gy + 14]]), {fill:HL, width:2.6});
+    SK.rect(s, 142, 128, 84, 14, {fill:'#FBFBF8', width:2.4});
+    SK.line(s, 136, 30, 128, 18, {width:2.2}); SK.line(s, 150, 24, 148, 10, {width:2.2}); SK.line(s, 120, 40, 108, 32, {width:2.2});
+  },
   // قتال الأنمي: مقاتلان وبرق بينهما
   fighters(s) {
     const L = {head:[60, 40], spikes:[[47, 32], [43, 14], [54, 23], [58, 7], [65, 22], [74, 11], [74, 30]],
