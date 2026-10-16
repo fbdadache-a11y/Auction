@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>فحص صور الشخصيات</title>
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Noto+Kufi+Arabic:wght@600;800;900&family=Readex+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/manga.css"><link rel="stylesheet" href="css/components.css">
+<style>
+.ck{display:grid;gap:14px}
+.bar{height:18px;border:var(--bd) solid var(--ink);background:var(--card);overflow:hidden}.bar i{display:block;height:100%;background:var(--red);width:0;transition:width .3s}
+.cnt{display:flex;gap:12px;flex-wrap:wrap}.cnt div{flex:1;min-width:120px;border:2px solid var(--ink);background:var(--card);padding:6px 12px}.cnt b{display:block;font-size:2rem;font-family:var(--f-disp);font-weight:400}
+table{border-collapse:collapse;width:100%;font-size:.9rem}td,th{border-bottom:1px dotted var(--ink);padding:4px 8px;text-align:start}
+.ltr{unicode-bidi:plaintext}
+</style>
+</head>
+<body>
+<div id="app" style="padding-top:20px"><div class="ck">
+  <h1 style="font-family:var(--f-disp);font-weight:400;font-size:2.4rem">فحص صور الشخصيات</h1>
+  <p>تبحث هذه الصفحة عن صورة كل شخصية من الـ1000 في AniList (وJikan احتياطاً) وتعرض الأسماء التي لم تُوجد لها صورة، لتصحيح كتابتها في <b>js/data/characters.js</b>. النتائج تُحفظ في المتصفح فلا تُعاد الطلبات، والفحص الكامل يستغرق بضع دقائق.</p>
+  <div class="row"><button class="go" id="run">ابدأ الفحص</button><button class="alt" id="clr">مسح الذاكرة المؤقتة</button><button class="alt" id="cp" disabled>نسخ قائمة الفاشلين</button></div>
+  <div class="bar"><i id="pb"></i></div>
+  <div class="cnt"><div>تم فحصها<b id="c-done">0</b></div><div>وُجدت صورتها<b id="c-ok">0</b></div><div>بلا صورة<b id="c-bad">0</b></div><div>تعذّر الاتصال<b id="c-err">0</b></div></div>
+  <p class="mut" id="msg"></p>
+  <table id="tb"><thead><tr><th>الاسم العربي</th><th>الاسم الإنجليزي المرسل</th><th>الأنمي</th></tr></thead><tbody></tbody></table>
+</div></div>
+<script src="../../shared/js/core.js"></script>
+<script src="js/data/series.js"></script><script src="js/data/characters.js"></script><script src="js/data/mentors.js"></script>
+<script src="js/config.js"></script><script src="js/images.js"></script>
+<script>
+const ALL = ALL_P.concat(ALL_C); let bad = [];
+const set = (id, v) => $(id).textContent = v;
+$('clr').onclick = () => { Object.keys(localStorage).filter(k => k.startsWith('img2:')).forEach(k => localStorage.removeItem(k)); $('msg').textContent = 'مُسحت الذاكرة المؤقتة للصور.'; };
+$('cp').onclick = () => navigator.clipboard && navigator.clipboard.writeText(bad.map(p => `${p.name} | ${p.en} | ${srName(p)}`).join('\n'));
+$('run').onclick = async () => {
+  $('run').disabled = true; bad = []; $('tb').tBodies[0].innerHTML = '';
+  let done = 0, ok = 0, err = 0; const t0 = Date.now();
+  const tick = () => { set('c-done', done); set('c-ok', ok); set('c-bad', bad.length); set('c-err', err); $('pb').style.width = done / ALL.length * 100 + '%'; };
+  const one = async it => {
+    await getImg(it);
+    done++;
+    const cached = localStorage.getItem('img2:' + IKEY(it));
+    if (cached) ok++; else if (cached === '') { bad.push(it); $('tb').tBodies[0].insertAdjacentHTML('beforeend', `<tr><td>${esc(it.name)}</td><td class="ltr">${esc(it.en)}</td><td>${esc(srName(it))}</td></tr>`); } else err++;
+    tick();
+  };
+  const q = ALL.slice(); let busy = 0;
+  await new Promise(res => { const pump = () => { while (busy < 16 && q.length) { busy++; one(q.shift()).then(() => { busy--; pump(); if (!busy && !q.length) res(); }); } }; pump(); });
+  $('msg').textContent = `انتهى الفحص خلال ${Math.round((Date.now() - t0) / 1000)} ثانية. ${err ? 'بعض الطلبات تعذّر اتصالها (حد الطلبات أو انقطاع الشبكة): أعد الفحص لتكملتها.' : ''}`;
+  $('cp').disabled = !bad.length; $('run').disabled = false;
+};
+</script>
+</body></html>
