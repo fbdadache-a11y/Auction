@@ -1,0 +1,25 @@
+/* ===== منصة المزاد ===== */
+.stage{display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center;margin:22px 0 26px;position:relative}
+.stage-card{position:relative;padding:8px}
+.stage-card .speed{inset:-30px -34px;z-index:-1}
+.panel{padding:18px 22px}
+.turnbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:2px solid var(--ink);border-inline-start:12px solid var(--kit);background:var(--paper);padding:6px 14px;margin-bottom:14px}
+.turnbar b{font-family:var(--f-head);font-weight:800}
+.lbl{font-size:.8rem;color:var(--mut);line-height:1.3;font-weight:700}
+.price{color:var(--red);font-size:7.2rem;margin:0 0 4px;-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:5px 5px 0 var(--ink);display:inline-block;transform:rotate(-2deg);padding-inline:6px}
+.pulse{animation:pulse .35s ease-out}
+.by{font-size:.9rem;color:var(--mut);margin-bottom:14px;min-height:1.5em;font-weight:600}
+.by b{color:var(--ink)}
+.bids{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.bids button{font-size:2.2rem;font-family:var(--f-disp);font-weight:400;padding:8px 0 4px;line-height:1;display:flex;align-items:baseline;justify-content:center;gap:4px;background:var(--card);color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.bids button:hover:not(:disabled){background:var(--red);color:#fff;box-shadow:4px 4px 0 var(--ink)}
+.bids2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.bids2 button:first-child{background:var(--ink);color:var(--paper)}
+.bids2 button.alt{background:var(--card);color:var(--red);border-color:var(--ink)}
+.bids2 button.alt:hover:not(:disabled){background:var(--red);color:#fff}
+.custom{display:flex;gap:10px;margin-top:14px;align-items:center}
+.bids3{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.bids3 button{min-height:38px;font-size:.88rem;padding:4px 10px;box-shadow:none;border-width:2px;border-style:dashed}
+.bids3 button:hover:not(:disabled){background:var(--paper2);box-shadow:none;transform:none}
+.undo-deal{margin-top:12px;box-shadow:none;border-style:dashed;min-height:40px;border-width:2px}
+.undo-deal:hover:not(:disabled){box-shadow:none}
