@@ -6,9 +6,6 @@
 .tot .tr.big{border-top:2px dotted var(--ink);margin-top:4px;padding-top:6px}
 .tot .tr.big b{font-size:2.8rem;color:var(--red)}
 .hint{font-size:.85rem;color:var(--mut);font-weight:600;margin:4px 0 0}
-.rps{list-style:none;margin:6px 0 4px;padding:0;display:flex;gap:10px;flex-wrap:wrap}
-.rps li{display:flex;align-items:center;gap:8px;background:var(--card);border:2px solid var(--ink);padding:4px 14px;font-weight:800;font-size:.9rem}
-.rps li b{color:var(--red)}
 /* لوحة الجولات */
 .tracker{display:flex;gap:6px;justify-content:center;margin:12px 0}
 .tracker i{width:34px;height:12px;border:2px solid var(--ink);background:var(--card);transform:skewX(-14deg)}
