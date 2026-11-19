@@ -45,3 +45,4 @@
   .dsh{flex-direction:column;gap:0}.dsh span{font-size:.75rem}
   .cover-c{margin-top:34px;height:270px}
 }
+@media (max-width:720px){.sbc .ln.hm{display:none}.sbs{font-size:.7rem}.dopt b{white-space:normal;line-height:1.2}.sbm small{display:block;font-size:.4em}}
