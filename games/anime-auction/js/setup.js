@@ -29,14 +29,14 @@ function setup() {
       <div><span class="lbl">مقاتلون في الفريق</span><b class="num">5</b></div>
       <div><span class="lbl">بطل في المزاد</span><b class="num">${ELITE_P.length}</b></div>
       <div><span class="lbl">معلّم عظيم</span><b class="num">${ELITE_C.length}</b></div></div>
-      <p class="mut">لا يظهر هنا إلا أقوى الأبطال، وقواهم متقاربة، فالمزايدة الذكية وحسن اختيار المقاتل في كل جولة هما ما يحسم المعركة.</p>
+      <p class="mut">لا يظهر هنا إلا أقوى الأبطال، وقواهم متقاربة، فالمزايدة الذكية وحسن اختيار المقاتل وإدارة صحته هما ما يحسم الحرب.</p>
       <div class="sec">أبطال قد يُعرضون في المزاد</div>
       ${slider('sl-leg', shuffle(ELITE_P).slice(0, 12).map(p => fcard(p, {w:130})), 'cards')}`;
   render(topbar() + head + `<section class="card"><div class="teams2">${teamBox(0)}${teamBox(1)}</div>
       ${L ? elite : classic}
       <ol class="how"><li><i data-lucide="gavel"></i><span>زايد على مقاتل يُعرض بقوة سرية، ومن يخسر المزاد يشتري المقاتل التالي.</span></li>
         <li><i data-lucide="users"></i><span>أكمل الفريق بالترتيب: القتاليون ثم أصحاب القدرات ثم السريعون ثم المعلّم.</span></li>
-        <li><i data-lucide="swords"></i><span>تُكشف القوى، ثم تُخاض المعركة جولة بعد جولة باختيار سري، والأقوى لا يفوز دائماً.</span></li></ol>
+        <li><i data-lucide="swords"></i><span>تُكشف القوى، ثم تُخاض الحرب بمواجهات باختيار سري. لا حظ فيها، والأقوى يفوز لكن جراحه تلاحقه.</span></li></ol>
       <div class="row"><button id="go" class="go">${L ? 'ابدأ مزاد النخبة' : 'ابدأ المزاد'}</button></div></section>
     <p class="mut">${ALL_P.length} مقاتلاً و${ALL_C.length} معلّماً. الصور تُجلب من AniList وتحتاج إنترنت.</p>`, () => { initSliders(); refreshSetup(); });
   $('go').onclick = start;
