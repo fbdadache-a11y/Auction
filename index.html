@@ -2,23 +2,46 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<meta name="theme-color" content="#F2EEE3">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#F4F3EF">
-<title>ألعاب الكومباطا</title>
-<meta name="description" content="ألعاب لاعبين اثنين على جهاز واحد. بلا تسجيل وبلا تحميل.">
-<link href="https://fonts.googleapis.com/css2?family=Playpen+Sans+Arabic:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared/css/slider.css">
-<link rel="stylesheet" href="hub/css/hub.css">
-<!-- مكتبة اختيارية للرسم اليدوي؛ المينيو يعمل ويبدو يدوياً بدونها -->
-<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js" defer onload="window.__rough&&__rough()"></script>
+<title>مزاد الأنمي</title>
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Noto+Kufi+Arabic:wght@600;800;900&family=Readex+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/css/slider.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/manga.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/auction.css">
+<link rel="stylesheet" href="css/setup.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/battle.css">
+<link rel="stylesheet" href="css/fight.css">
+<link rel="stylesheet" href="css/responsive.css">
+<!-- مكتبات خارجية اختيارية؛ اللعبة تعمل بدونها -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js" defer onload="window.__lenis&&__lenis()"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer onload="window.__lu&&__lu()"></script>
 </head>
 <body>
-<main id="app"></main>
-<script src="shared/js/core.js"></script>
-<script src="shared/js/slider.js"></script>
-<script src="games/registry.js"></script>
-<script src="hub/js/sketch.js"></script>
-<script src="hub/js/doodles.js"></script>
-<script src="hub/js/hub.js"></script>
+<div id="app"></div>
+<!-- الترتيب مهم: سكربتات عادية تتشارك النطاق العام. المشتركة أولاً ثم الخاصة باللعبة -->
+<script src="../../shared/js/core.js"></script>
+<script src="../../shared/js/fx.js"></script>
+<script src="../../shared/js/audio.js"></script>
+<script src="../../shared/js/slider.js"></script>
+<script src="js/data/series.js"></script>
+<script src="js/data/characters.js"></script>
+<script src="js/data/mentors.js"></script>
+<script src="js/config.js"></script>
+<script src="js/sounds.js"></script>
+<script src="js/images.js"></script>
+<script src="js/helpers.js"></script>
+<script src="js/home.js"></script>
+<script src="js/setup.js"></script>
+<script src="js/auction.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/save.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
