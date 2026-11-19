@@ -36,7 +36,7 @@ function setup() {
       ${L ? elite : classic}
       <ol class="how"><li><i data-lucide="gavel"></i><span>زايد على مقاتل يُعرض بقوة سرية، ومن يخسر المزاد يشتري المقاتل التالي.</span></li>
         <li><i data-lucide="users"></i><span>أكمل الفريق بالترتيب: القتاليون ثم أصحاب القدرات ثم السريعون ثم المعلّم.</span></li>
-        <li><i data-lucide="swords"></i><span>تُكشف القوى، ثم تُخاض الحرب بمواجهات باختيار سري. لا حظ فيها، والأقوى يفوز لكن جراحه تلاحقه.</span></li></ol>
+        <li><i data-lucide="swords"></i><span>تُكشف القوى، ثم يرتّب كل لاعب سراً ومرة واحدة من يقاتل في كل جولة وأين يضع قدرته القصوى. لا حظ فيها.</span></li></ol>
       <div class="row"><button id="go" class="go">${L ? 'ابدأ مزاد النخبة' : 'ابدأ المزاد'}</button></div></section>
     <p class="mut">${ALL_P.length} مقاتلاً و${ALL_C.length} معلّماً. الصور تُجلب من AniList وتحتاج إنترنت.</p>`, () => { initSliders(); refreshSetup(); });
   $('go').onclick = start;
@@ -62,7 +62,7 @@ function start() {
   names = [$('n0').value.trim() || 'الفريق الأول', $('n1').value.trim() || 'الفريق الثاني'];
   if (names[0] === names[1]) names[1] += ' 2';
   const L = edition === 'elite', m = cfg();
-  S = {n:names, k:[...kits], mode:L ? 'five' : mode, ed:edition, m:[m.money, m.money], spent:[0, 0], sq:[[], []], co:[null, null], stage:0, lotNo:0, log:[],
+  S = {n:names, k:[...kits], mode:L ? 'five' : mode, ed:edition, m0:m.money, m:[m.money, m.money], spent:[0, 0], sq:[[], []], co:[null, null], stage:0, lotNo:0, log:[],
        P:[...pool()], C:[...mentorPool()], form:m.form, N:Object.values(m.form).reduce((a, b) => a + b),
        inc:m.inc || [1, 5, 20], minp:m.minp || 1};
   sndDeal();

@@ -20,7 +20,7 @@ function next() {
 
 function solo() {
   const w = lot.el[0]; lot.mode = 'solo'; save();
-  render(topbar() + board(w) + stepper() + `<section class="stage"><div class="stage-card"><span class="speed"></span>${fcard(lot.item, {fresh:true})}</div>
+  render(topbar() + board(w) + stepper() + `<section class="stage"><div class="stage-card">${splash(lot.item, {fresh:true})}</div>
     <div class="panel"><div class="turnbar" style="--kit:${S.k[w]}"><b>${T(w)}</b><span>لا منافس له على هذا المركز</span></div>
       <div class="lbl">السعر الثابت</div><div class="price num">${M(S.minp)}</div>
       <p class="by">يضمّه ${T(w)} بسعر ${M(S.minp)} فقط.</p>
@@ -33,7 +33,7 @@ function auction(o) {
   if (lot.bid > 0 && mx <= lot.bid) return resolve(lot.last, lot.bid, 'bid'); // لا يستطيع الرفع: يُحسم المزاد
   lot.mode = 'auction'; save();
   const btns = S.inc.map((x, k) => `<button onclick="raise(${lot.bid + x})" ${lot.bid + x > mx ? 'disabled' : ''}><span class="num">${M(x, '+')}</span><kbd>${[1, 5, 2][k]}</kbd></button>`).join('');
-  render(topbar() + board(t) + stepper() + `<section class="stage"><div class="stage-card"><span class="speed"></span>${fcard(lot.item, {fresh:o.fresh})}</div>
+  render(topbar() + board(t) + stepper() + `<section class="stage"><div class="stage-card">${splash(lot.item, {fresh:o.fresh})}</div>
     <div class="panel"><div class="turnbar" style="--kit:${S.k[t]}"><b>${T(t)}</b><span>دورك للمزايدة · أقصى عرض متاح ${M(mx)}</span></div>
       <div class="lbl">السعر الحالي</div>
       <div class="price num${o.pulse ? ' pulse' : ''}"><span class="ltr"><span id="pv">${lot.bid}</span><small>M</small></span></div>
@@ -85,7 +85,7 @@ function resolve(w, price, via) {
 function dealView(fresh) {
   const {w, price, via} = lot.deal, it = lot.item; save();
   const stamp = `<div class="stamp-w"><div class="stamp" id="stamp" style="--kit:${S.k[w]}">تم البيع<small>${esc(S.n[w])} · ${price}M</small></div></div>`;
-  render(topbar() + board(null) + stepper() + `<section class="stage"><div class="stage-card"><span class="speed"></span>${fcard(it, {stamp})}</div>
+  render(topbar() + board(null) + stepper() + `<section class="stage"><div class="stage-card">${splash(it, {stamp})}</div>
     <div class="panel"><div class="turnbar" style="--kit:${S.k[w]}"><b>${T(w)}</b><span>أتمّ الصفقة</span></div>
       <div class="lbl">سعر البيع</div><div class="price num">${M(price)}</div>
       <p class="by">${T(w)} ضمّ <b>${esc(it.name)}</b> وبقي له ${M(S.m[w])}.</p>

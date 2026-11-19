@@ -22,6 +22,16 @@ function fcard(it, o) {
       <span class="cc-pow num ${o.rating != null ? '' : 'hid'}">${r}</span></div>
     <div class="cc-nm">${esc(it.name)}</div><div class="cc-sr">${coach ? 'أثره سري · ' : ''}${esc(srName(it))}</div>${o.stamp || ''}</div>`;
 }
+/* ===== صورة كبيرة بقصّ مائل لشاشة المزاد (لوحة افتتاحية في مانجا) ===== */
+function splash(it, o) {
+  o = o || {};
+  const coach = it.t === 'c';
+  return `<div class="splash ${coach ? 'coach' : 'r-' + it.pos}${o.fresh ? ' fresh' : ''}"><div class="sp-in"><span class="speed"></span>
+    <div class="sp-img">${av(it)}</div><span class="tone fade"></span>
+    <span class="sp-role">${coach ? ico('graduation-cap') + '<b>معلّم</b>' : ico(ROLES[it.pos].ic) + '<b>' + ROLES[it.pos].n + '</b>'}</span>
+    <span class="sp-pow burst">${o.rating != null ? o.rating : '؟؟'}</span>
+    <div class="sp-name"><b>${esc(it.name)}</b><small>${coach ? 'أثره سري · ' : ''}${esc(srName(it))}</small></div></div>${o.stamp || ''}</div>`;
+}
 /* ===== لوحة الفريق: صفوف الأدوار ===== */
 function boardHTML(i, o) {
   o = o || {};
@@ -49,11 +59,14 @@ const goHome = () => { if (!lot || S && S.stage >= 4 || confirm('العودة إ
 const topbar = () => `<header class="top"><button class="brand" onclick="goHome()" aria-label="الصفحة الرئيسية"><span class="logo-mk">مزاد</span><span>الأنمي</span></button><div class="tools">
   <span class="chip" id="modeChip">${chipTxt()}</span>
   <button class="icon-btn" data-snd onclick="toggleSound()" aria-label="تشغيل الصوت أو إيقافه">${sndBtn()}</button></div></header>`;
+/* شريط الحالة بأسلوب ألعاب القتال: شريط مائل لكل فريق (ميزانيته المتبقية) ولوحة وسطى */
 function board(turn) {
-  const tm = i => `<div class="sbt${turn === i ? ' on' : ''}" style="--kit:${S.k[i]}"><div class="sbh"><span class="sbn">${T(i)}</span>${turn === i ? '<span class="turn">دوره</span>' : ''}${done(i) ? '<span class="turn ok">مكتمل</span>' : ''}</div>
-    <div class="sbm num">${M(S.m[i])}</div><div class="sbs">المصروف ${M(S.spent[i])}</div></div>`;
+  const m0 = S.m0 || cfg().money;
+  const tm = i => `<div class="hud-t t${i}${turn === i ? ' on' : ''}" style="--kit:${S.k[i]}"><div class="hud-n"><span class="sbn">${T(i)}</span>${turn === i ? '<span class="turn">دوره</span>' : ''}${done(i) ? '<span class="turn ok">مكتمل</span>' : ''}</div>
+    <div class="hud-bar"><i style="width:${Math.max(0, S.m[i] / m0 * 100)}%"></i></div>
+    <div class="hud-m"><b class="num">${M(S.m[i])}</b><small>المصروف ${M(S.spent[i])}</small></div></div>`;
   const total = 2 * S.N + 2;
-  return `<section class="sb">${tm(0)}<div class="sbc"><div class="st">${LBL[ORD[Math.min(S.stage, 3)]]}</div><div class="ln">الصفقة <span class="num">${Math.min(S.lotNo, total)}</span> من <span class="num">${total}</span></div>
+  return `<section class="hud">${tm(0)}<div class="hud-c"><div class="st">${LBL[ORD[Math.min(S.stage, 3)]]}</div><div class="ln">الصفقة <span class="num">${Math.min(S.lotNo, total)}</span> / <span class="num">${total}</span></div>
     <div class="prog"><i style="width:${Math.min(100, S.lotNo / total * 100)}%"></i></div></div>${tm(1)}</section>`;
 }
 const stepper = () => `<div class="steps">${ORD.map((p, i) => `<span class="${i < S.stage ? 'done' : i === S.stage ? 'on' : ''}">${LBL[p]}</span>`).join('')}</div>`;
